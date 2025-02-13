@@ -1,3 +1,21 @@
+<?php
+
+  if($_SERVER["REQUEST_METHOD"] === "POST"){
+    if(session_status() == PHP_SESSION_NONE){
+      session_start();
+      
+      
+    }
+    require_once('functions/login.php');
+    process_login($_POST["username"], $_POST["password"]);
+
+  }
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +23,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Pages / Login - NiceAdmin Bootstrap Template</title>
+  <title>Login</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -58,7 +76,18 @@
                     <!-- <p class="text-center small">Enter your username & password to login</p> -->
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <!-- Show Error Message -->
+                  <?php
+                  if(!empty($_SESSION["error-message"])){
+                    ?>
+                    <div class="alert alert-danger text-center" role="alert" style="margin: 8px ;padding: 8px;">
+                      <?=$_SESSION["error-message"]?>
+                    </div>
+                    <?php
+                  }
+                  
+                  ?>
+                  <form class="row g-3 needs-validation" novalidate method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
 
                     <div class="col-12">
                       <label for="yourUsername" class="form-label">Username</label>
@@ -97,7 +126,7 @@
                 <!-- You can delete the links only if you purchased the pro version. -->
                 <!-- Licensing information: https://bootstrapmade.com/license/ -->
                 <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                  &copy; <?= date("Y")?> All rights reserved.
               </div>
 
             </div>
@@ -123,6 +152,8 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <script src="assets/main/login.js"></script>
 
 </body>
 
