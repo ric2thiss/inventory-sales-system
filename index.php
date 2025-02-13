@@ -1,12 +1,11 @@
 <?php
 session_start();
-echo $_SESSION['id'];
 if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
     // Connection
     require_once("functions/dbconnect.php");
     $conn = dbconnect();
     $id = $_SESSION['id'];
-    $role = $_SESSION["role"];
+    $role = (!empty($_SESSION["role"]))? "employees":"customer";
 
     $query = "SELECT * FROM $role WHERE id = :id";
 
@@ -20,7 +19,8 @@ if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
         if (empty($result["role"])) {
             echo "You are a customer";
         } else {
-            echo "You are an admin";
+            header("Location: index.html");
+            exit;
         }
     } else {
         // Handle case where user with the given ID was not found
