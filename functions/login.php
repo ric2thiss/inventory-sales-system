@@ -28,8 +28,8 @@
     // Attempt login for employee or customer
     if (attempt_login($conn, 'employees', $username, $password) || attempt_login($conn, 'customers', $username, $password)) {
         // Success - user logged in
-        header('Location: index.php');
-        exit;
+        header('Location: check-role.php');
+        exit();
     } else {
         // Failure - invalid credentials
         $_SESSION["error-message"] = "Invalid username or password";

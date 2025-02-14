@@ -1,15 +1,18 @@
 <?php
+  if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    if(!empty($_SESSION["id"]) && !empty($_SESSION["username"]) && !empty($_SESSION["role"])){
+      header("Location: check-role.php");
+      exit();
+    }
+  }
 
   if($_SERVER["REQUEST_METHOD"] === "POST"){
-    if(session_status() == PHP_SESSION_NONE){
-      session_start();
-      
-      
-    }
     require_once('functions/login.php');
     process_login($_POST["username"], $_POST["password"]);
 
   }
+  
 
 
 
