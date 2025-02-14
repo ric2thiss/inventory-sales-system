@@ -1,6 +1,9 @@
 <?php
 
 session_start();
+if(empty($_SESSION["username"]) || empty($_SESSION["id"]) || empty($_SESSION["role"])){
+  header("location:login.php");
+}
 
 ?>
 

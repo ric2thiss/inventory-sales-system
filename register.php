@@ -1,3 +1,24 @@
+<?php
+  if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    if(!empty($_SESSION["id"]) && !empty($_SESSION["username"]) && !empty($_SESSION["role"])){
+      header("Location: check-role.php");
+      exit();
+    }
+  }
+
+  if($_SERVER["REQUEST_METHOD"] === "POST"){
+    require_once('functions/register.php');
+    process_register($_POST["username"], $_POST["password"]);
+
+  }
+  
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,11 +85,28 @@
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <!-- Show Error Message -->
+                  <?php
+                  if(!empty($_SESSION["error-message"])){
+                    ?>
+                    <div class="alert alert-danger text-center" role="alert" style="margin: 8px ;padding: 8px;">
+                      <?=$_SESSION["error-message"]?>
+                    </div>
+                    <?php
+                  }
+                  
+                  ?>
+
+                  <form class="row g-3 needs-validation" novalidate  method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
                     <div class="col-12">
-                      <label for="yourName" class="form-label">Your Name</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
+                      <label for="yourName" class="form-label">First Name</label>
+                      <input type="text" name="firstname" class="form-control" id="yourFirstName" required>
+                      <div class="invalid-feedback">Please, enter your firstname!</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="yourName" class="form-label">Last Name</label>
+                      <input type="text" name="lastname" class="form-control" id="yourLastName" required>
+                      <div class="invalid-feedback">Please, enter your lastname!</div>
                     </div>
 
                     <div class="col-12">
@@ -78,9 +116,20 @@
                     </div>
 
                     <div class="col-12">
+                      <label for="yourEmail" class="form-label">Your Contact No.</label>
+                      <input type="number" name="contact_number" class="form-control" id="yourContact" required>
+                      <div class="invalid-feedback">Please enter a working and valid contact number!</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="yourEmail" class="form-label">Your Address.</label>
+                      <input type="text" name="address" class="form-control" id="yourContact" required>
+                      <div class="invalid-feedback">Please your real Address!</div>
+                    </div>
+
+                    <div class="col-12">
                       <label for="yourUsername" class="form-label">Username</label>
                       <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
+                        <!-- <span class="input-group-text" id="inputGroupPrepend">@</span> -->
                         <input type="text" name="username" class="form-control" id="yourUsername" required>
                         <div class="invalid-feedback">Please choose a username.</div>
                       </div>
@@ -103,7 +152,7 @@
                       <button class="btn btn-primary w-100" type="submit">Create Account</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Already have an account? <a href="pages-login.html">Log in</a></p>
+                      <p class="small mb-0">Already have an account? <a href="login.php">Log in</a></p>
                     </div>
                   </form>
 
