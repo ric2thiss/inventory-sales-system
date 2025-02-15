@@ -1,9 +1,28 @@
 <?php
 
 session_start();
-if(empty($_SESSION["username"]) || empty($_SESSION["id"]) || empty($_SESSION["role"])){
+if(empty($_SESSION["username"])){
   header("location:login.php");
+  exit();
 }
+
+require_once("functions/DashboardControllers.php");
+require_once("functions/dbconnect.php");
+
+$res = index(dbconnect());
+echo $res;
+echo $res;
+echo $res;
+echo $res;
+echo "Title: " . $res['title'];  // Accessing title
+echo "User: " . $res['user']; 
+
+echo "<pre>";
+print_r($res['user']);  // This will print the structure of the 'user' data
+echo "</pre>";
+
+
+echo $user["firstname"]
 
 ?>
 

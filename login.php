@@ -1,8 +1,11 @@
 <?php
   if(session_status() == PHP_SESSION_NONE){
     session_start();
-    if(!empty($_SESSION["id"]) && !empty($_SESSION["username"]) && !empty($_SESSION["role"])){
-      header("Location: check-role.php");
+    if(!empty($_SESSION["username"])){
+      if(empty($_SESSION["role"])){
+        echo "You are a customer";
+      }
+      header("Location: index.php");
       exit();
     }
   }
@@ -12,6 +15,7 @@
     process_login($_POST["username"], $_POST["password"]);
 
   }
+  
   
 
 
@@ -87,6 +91,7 @@
                       <?=$_SESSION["error-message"]?>
                     </div>
                     <?php
+                    unset($_SESSION["error-message"]);
                   }
                   
                   ?>

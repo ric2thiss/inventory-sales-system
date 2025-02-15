@@ -28,8 +28,11 @@
     // Attempt login for employee or customer
     if (attempt_login($conn, 'employees', $username, $password) || attempt_login($conn, 'customers', $username, $password)) {
         // Success - user logged in
-        header('Location: check-role.php');
-        exit();
+        if(empty($_SESSION["role"])){
+            echo "You are a customer";
+          }
+          header("Location: index.php");
+          exit();
     } else {
         // Failure - invalid credentials
         $_SESSION["error-message"] = "Invalid username or password";
@@ -50,7 +53,6 @@ function attempt_login($conn, $table, $username, $password) {
         if (password_verify($password, $data['password'])) {
             // Store user info in session
             $_SESSION['username'] = $username;
-            $_SESSION['id'] = $data['id'];
             $_SESSION["role"] = $data["role"];
             return true;
         }

@@ -69,7 +69,7 @@ function attempt_register($conn, $firstname, $lastname, $email, $contact_number,
     try {
         // Execute the query
         $stmt->execute();
-        echo "Registration successful!";
+        echo "Customer Registration successful!";
     } catch (Exception $e) {
         echo "Error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     }

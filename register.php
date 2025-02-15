@@ -9,7 +9,7 @@
 
   if($_SERVER["REQUEST_METHOD"] === "POST"){
     require_once('functions/register.php');
-    process_register($_POST["username"], $_POST["password"]);
+    process_register();
 
   }
   
@@ -87,15 +87,20 @@
 
                   <!-- Show Error Message -->
                   <?php
-                  if(!empty($_SESSION["error-message"])){
-                    ?>
-                    <div class="alert alert-danger text-center" role="alert" style="margin: 8px ;padding: 8px;">
-                      <?=$_SESSION["error-message"]?>
-                    </div>
-                    <?php
+                  // Ensure session is started
+
+                  if (isset($_SESSION["error-message"])) {
+                      // Store the message to show it, then unset it
+                      $errorMessage = $_SESSION["error-message"];
+                      unset($_SESSION["error-message"]);
+                      ?>
+                      <div class="alert alert-danger text-center" role="alert" style="margin: 8px; padding: 8px;">
+                          <?= $errorMessage ?>
+                      </div>
+                      <?php
                   }
-                  
                   ?>
+
 
                   <form class="row g-3 needs-validation" novalidate  method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>">
                     <div class="col-12">
