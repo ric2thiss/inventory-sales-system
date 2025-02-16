@@ -1,28 +1,9 @@
 <?php
 
-session_start();
-if(empty($_SESSION["username"])){
-  header("location:login.php");
-  exit();
-}
-
-require_once("functions/DashboardControllers.php");
-require_once("functions/dbconnect.php");
-
-$res = index(dbconnect());
-echo $res;
-echo $res;
-echo $res;
-echo $res;
-echo "Title: " . $res['title'];  // Accessing title
-echo "User: " . $res['user']; 
-
-echo "<pre>";
-print_r($res['user']);  // This will print the structure of the 'user' data
-echo "</pre>";
+require_once("inc.headers.php");
 
 
-echo $user["firstname"]
+
 
 ?>
 
@@ -67,7 +48,7 @@ echo $user["firstname"]
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+        <span class="d-none d-lg-block">AQUA EVAN</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -233,12 +214,12 @@ echo $user["firstname"]
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2"><?=ucfirst($user["firstname"])?></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
+              <h6><?=ucfirst($user["firstname"] . $user["lastname"] )?></h6>
               <span><?=ucfirst($_SESSION["role"])?></span>
             </li>
             <li>
@@ -246,7 +227,7 @@ echo $user["firstname"]
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.php">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -296,7 +277,7 @@ echo $user["firstname"]
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link " href="index.php">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -304,25 +285,25 @@ echo $user["firstname"]
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Inventory Management </span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Alerts</span>
+              <i class="bi bi-circle"></i><span>Stock Tracking</span>
             </a>
           </li>
           <li>
             <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Accordion</span>
+              <i class="bi bi-circle"></i><span>Usage & Refill Logs</span>
             </a>
           </li>
           <li>
             <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
+              <i class="bi bi-circle"></i><span>Supplier Management</span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a href="components-breadcrumbs.html">
               <i class="bi bi-circle"></i><span>Breadcrumbs</span>
             </a>
@@ -376,21 +357,21 @@ echo $user["firstname"]
             <a href="components-tooltips.html">
               <i class="bi bi-circle"></i><span>Tooltips</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </li><!-- End Components Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-journal-text"></i><span>Order Management</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="forms-elements.html">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
+              <i class="bi bi-circle"></i><span>Delivery Orders</span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a href="forms-layouts.html">
               <i class="bi bi-circle"></i><span>Form Layouts</span>
             </a>
@@ -404,23 +385,23 @@ echo $user["firstname"]
             <a href="forms-validation.html">
               <i class="bi bi-circle"></i><span>Form Validation</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-layout-text-window-reverse"></i><span>Customer Management</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="tables-general.html">
-              <i class="bi bi-circle"></i><span>General Tables</span>
+              <i class="bi bi-circle"></i><span>Customer Details</span>
             </a>
           </li>
           <li>
             <a href="tables-data.html">
-              <i class="bi bi-circle"></i><span>Data Tables</span>
+              <i class="bi bi-circle"></i><span>Order History</span>
             </a>
           </li>
         </ul>
@@ -428,22 +409,22 @@ echo $user["firstname"]
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Charts</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-bar-chart"></i><span>Payment Tracking</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+              <i class="bi bi-circle"></i><span>Cash Payments</span>
             </a>
           </li>
           <li>
             <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+              <i class="bi bi-circle"></i><span>Gcash Payments</span>
             </a>
           </li>
           <li>
             <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+              <i class="bi bi-circle"></i><span>Credit Payments</span>
             </a>
           </li>
         </ul>
@@ -451,28 +432,28 @@ echo $user["firstname"]
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gem"></i><span>Icons</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-gem"></i><span>Sales Reports</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+              <i class="bi bi-circle"></i><span>Daily</span>
             </a>
           </li>
           <li>
             <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
+              <i class="bi bi-circle"></i><span>Weekly</span>
             </a>
           </li>
           <li>
             <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
+              <i class="bi bi-circle"></i><span>Monthly</span>
             </a>
           </li>
         </ul>
       </li><!-- End Icons Nav -->
 
-      <li class="nav-heading">Pages</li>
+      <li class="nav-heading">Account</li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
@@ -494,34 +475,6 @@ echo $user["firstname"]
           <span>Contact</span>
         </a>
       </li><!-- End Contact Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
-          <i class="bi bi-card-list"></i>
-          <span>Register</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-login.html">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Login</span>
-        </a>
-      </li><!-- End Login Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-error-404.html">
-          <i class="bi bi-dash-circle"></i>
-          <span>Error 404</span>
-        </a>
-      </li><!-- End Error 404 Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-blank.html">
-          <i class="bi bi-file-earmark"></i>
-          <span>Blank</span>
-        </a>
-      </li><!-- End Blank Page Nav -->
 
     </ul>
 
