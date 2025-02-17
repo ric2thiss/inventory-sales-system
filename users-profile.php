@@ -2,7 +2,19 @@
 
 require_once("inc.headers.php");
 
+if($_SERVER["REQUEST_METHOD"] === "POST"){
+  $address = htmlspecialchars(trim($_POST["address"]));
+  $contact_number = htmlspecialchars(trim($_POST["contact_number"]));
 
+  if(!empty($address) && !empty($contact_number)){
+    $conn = dbconnect();
+    if(update_user_personal_details($conn, $address, $contact_number)){
+      $message = "User personal details updated successfully.";
+    }else{
+      $message = "Failed to update user personal details.";
+    }
+  }
+}
 
 
 ?>
@@ -509,7 +521,7 @@ require_once("inc.headers.php");
 
               <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
               <h2><?=ucfirst($user["firstname"] . $user["lastname"] )?></h2>
-              <h3><?=ucfirst($user["role"])?></h3>
+              <h3><?= htmlspecialchars(ucfirst($user["role"] ?? 'customer')) ?></h3>
               <!-- <div class="social-links mt-2">
                 <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
                 <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -555,12 +567,12 @@ require_once("inc.headers.php");
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
-                    <div class="col-lg-9 col-md-8"><?=htmlspecialchars(ucfirst($user["firstname"] . $user["lastname"] ))?></div>
+                    <div class="col-lg-9 col-md-8"><?=htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"] ))?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Role</div>
-                    <div class="col-lg-9 col-md-8"><?=htmlspecialchars(ucfirst($user["role"]))?></div>
+                    <div class="col-lg-9 col-md-8"> <?= htmlspecialchars(ucfirst($user["role"] ?? 'customer')) ?> </div>
                   </div>
 
                   <div class="row">
@@ -598,7 +610,12 @@ require_once("inc.headers.php");
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form>
+                   <?php
+                   if(isset($message)){
+                    echo "<div class='alert alert-success'>$message</div>";
+                   }
+                   ?>
+                  <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>">
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
@@ -613,7 +630,7 @@ require_once("inc.headers.php");
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="<?=htmlspecialchars(ucfirst($user["firstname"] . $user["lastname"] ))?>">
+                        <input disabled type="text" class="form-control" id="fullName" value="<?=htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"] ))?>">
                       </div>
                     </div>
 
@@ -622,7 +639,7 @@ require_once("inc.headers.php");
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Role</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="<?=htmlspecialchars(ucfirst($user["role"]))?>">
+                        <input disabled type="text" class="form-control" id="Job" value="<?= htmlspecialchars(ucfirst($user["role"] ?? 'customer')) ?>">
                       </div>
                     </div>
 
@@ -636,7 +653,7 @@ require_once("inc.headers.php");
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="<?=htmlspecialchars(ucfirst($user["contact_number"]))?>">
+                        <input name="contact_number" type="text" class="form-control" id="Phone" value="<?=htmlspecialchars(ucfirst($user["contact_number"]))?>">
                       </div>
                     </div>
 
@@ -676,7 +693,7 @@ require_once("inc.headers.php");
                     </div> -->
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button name="submit" type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 

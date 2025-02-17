@@ -40,3 +40,21 @@
          return null;
      }
  }
+
+
+//  Update Method for users profile page
+function update_user_personal_details($conn, $address, $contact_number){
+    $table = isset($_SESSION["role"]) && !empty($_SESSION["role"]) ? 'employees' : 'customers';
+
+    try{
+        $query = "UPDATE $table SET address = :address, contact_number= :contact_number";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':contact_number', $contact_number);
+        $stmt->execute();
+        return true;
+    }catch(PDOException $error){
+        echo "Error: " . $error->getMessage();
+        return null;
+    }
+}
