@@ -58,3 +58,44 @@ function update_user_personal_details($conn, $address, $contact_number){
         return null;
     }
 }
+
+function update_user_personal_password($conn, $id, $current_password, $new_password) {
+    $table = isset($_SESSION["role"]) && !empty($_SESSION["role"]) ? 'employees' : 'customers';
+    $id_column = $table === 'employees' ? 'employee_id' : 'customer_id';
+
+    try {
+        // Fetch current password
+        $query1 = "SELECT password FROM $table WHERE $id_column = :id";
+        $stmt = $conn->prepare($query1);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Debugging output
+        if (!$user) {
+            echo "User not found!";
+            return false;
+        }
+
+        // var_dump($current_password, $user["password"]); // Debug password check
+
+        if (password_verify($current_password, $user["password"])) {
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+            $query = "UPDATE $table SET password = :password WHERE $id_column = :id";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':password', $hashed_password);
+            $stmt->execute();
+            return true;
+        } else {
+            echo "Password verification failed!";
+        }
+
+        return false;
+    } catch (PDOException $error) {
+        echo "Error: " . $error->getMessage();
+        return null;
+    }
+}
+

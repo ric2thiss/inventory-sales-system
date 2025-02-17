@@ -3,15 +3,36 @@
 require_once("inc.headers.php");
 
 if($_SERVER["REQUEST_METHOD"] === "POST"){
-  $address = htmlspecialchars(trim($_POST["address"]));
-  $contact_number = htmlspecialchars(trim($_POST["contact_number"]));
+  if(isset($_POST["update_profile_details"])){
+    $address = htmlspecialchars(trim($_POST["address"]));
+    $contact_number = htmlspecialchars(trim($_POST["contact_number"]));
+  
+    if(!empty($address) && !empty($contact_number)){
+      $conn = dbconnect();
+      if(update_user_personal_details($conn, $address, $contact_number)){
+        $message = "User personal details updated successfully.";
+      }else{
+        $message = "Failed to update user personal details.";
+      }
+    }
+    return;
+  }
 
-  if(!empty($address) && !empty($contact_number)){
-    $conn = dbconnect();
-    if(update_user_personal_details($conn, $address, $contact_number)){
-      $message = "User personal details updated successfully.";
-    }else{
-      $message = "Failed to update user personal details.";
+  if (isset($_POST["changepwd"])) {
+    $old_password = htmlspecialchars(trim($_POST["password"]));
+    $new_password = htmlspecialchars(trim($_POST["newpassword"]));
+    $re_new_password = htmlspecialchars(trim($_POST["renewpassword"]));
+
+    if ($new_password !== $re_new_password) {
+        echo "<script>alert('New passwords do not match.');</script>";
+    } else {
+        $conn = dbconnect();
+
+        if (update_user_personal_password($conn, $_SESSION["id"], $old_password, $new_password)) {
+            echo "<script>alert('Password updated successfully.');</script>";
+        } else {
+            echo "<script>alert('Incorrect current password or update failed.');</script>";
+        }
     }
   }
 }
@@ -475,7 +496,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
       <li class="nav-heading">Account</li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="users-profile.html">
+        <a class="nav-link collapsed" href="users-profile.php">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
@@ -693,7 +714,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
                     </div> -->
 
                     <div class="text-center">
-                      <button name="submit" type="submit" class="btn btn-primary">Save Changes</button>
+                      <button name="update_profile_details" type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
@@ -743,7 +764,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form>
+                  <form method="POST" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])?>">
 
                     <div class="row mb-3">
                       <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
@@ -767,7 +788,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Change Password</button>
+                      <button name="changepwd" type="submit" class="btn btn-primary">Change Password</button>
                     </div>
                   </form><!-- End Change Password Form -->
 

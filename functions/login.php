@@ -54,6 +54,7 @@ function attempt_login($conn, $table, $username, $password) {
             // Store user info in session
             $_SESSION['username'] = $username;
             $_SESSION["role"] = $data["role"];
+            $_SESSION["id"] = $table === 'employees' ? $data["employee_id"] : $data["customer_id"];
             return true;
         }
     }
