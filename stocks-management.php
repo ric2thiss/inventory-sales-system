@@ -10,7 +10,7 @@ require_once("inc.headers.php");
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Components / Alerts - NiceAdmin Bootstrap Template</title>
+  <title>Inventory Management</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -302,7 +302,7 @@ require_once("inc.headers.php");
           </a>
         </li>
         <li>
-          <a href="components-badges.html">
+          <a href="supplier-management.php">
             <i class="bi bi-circle"></i><span>Supplier Management</span>
           </a>
         </li>
@@ -498,7 +498,7 @@ require_once("inc.headers.php");
 <section class="section">
       <!-- Large Modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-stock">
-        Add Stock
+        New Item
     </button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
         Add Stock
@@ -508,63 +508,61 @@ require_once("inc.headers.php");
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Re</h5>
+                    <h5 class="modal-title">Inventory</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <!-- Start form -->
-                  <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Floating labels Form</h5>
+            
+              <h5 class="card-title">New Item Form</h5>
 
               <!-- Floating Labels Form -->
               <form class="row g-3">
                 <div class="col-md-12">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingName" placeholder="Your Name">
-                    <label for="floatingName">Your Name</label>
+                    <input type="text" class="form-control" id="floatingName" disabled value="<?=htmlspecialchars(ucfirst($user["firstname"] ." " . $user["lastname"] ))?>">
+                    <label for="floatingName">Employee Name</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingEmail" placeholder="Your Email">
-                    <label for="floatingEmail">Your Email</label>
+                    <input type="text" class="form-control" id="floatingItemName" placeholder="Item Name">
+                    <label for="floatingItemName">Item Name</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword">Password</label>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="form-floating">
-                    <textarea class="form-control" placeholder="Address" id="floatingTextarea" style="height: 100px;"></textarea>
-                    <label for="floatingTextarea">Address</label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="col-md-12">
-                    <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingCity" placeholder="City">
-                      <label for="floatingCity">City</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-floating mb-3">
                     <select class="form-select" id="floatingSelect" aria-label="State">
                       <option selected>New York</option>
                       <option value="1">Oregon</option>
                       <option value="2">DC</option>
                     </select>
-                    <label for="floatingSelect">State</label>
+                    <label for="floatingSupplierName">Supplier Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-md-12">
+                    <div class="form-floating">
+                      <input type="number" class="form-control" id="floatingUnitPrice" placeholder="Unit Price">
+                      <label for="floatingUnitPrice">Unit Price</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingCategory" aria-label="Category">
+                      <option selected>Gallon</option>
+                      <option value="1">Bottle</option>
+                      <option value="2">Filter</option>
+                      <option value="2">Supply</option>
+                    </select>
+                    <label for="floatingCategory">Category</label>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingZip" placeholder="Zip">
-                    <label for="floatingZip">Zip</label>
+                    <input type="text" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                    <label for="floatingStockQuantity">Quantity</label>
                   </div>
                 </div>
                 <div class="text-center">
@@ -573,14 +571,13 @@ require_once("inc.headers.php");
                 </div>
               </form><!-- End floating Labels Form -->
 
-            </div>
-          </div>
+
                    <!-- End form -->
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div><!-- End Large Modal-->

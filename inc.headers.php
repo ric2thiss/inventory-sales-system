@@ -1,12 +1,12 @@
 <?php
-
+session_start(); 
 require_once("functions/DashboardControllers.php");
 require_once("functions/dbconnect.php");
 
 $conn = dbconnect();
 
 // Get user data
-$user_data = index($conn);
+$user_data = index($conn,$_SESSION["username"], $_SESSION["role"]);
 
 $user = $user_data['user'];
 

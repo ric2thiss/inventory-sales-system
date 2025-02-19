@@ -9,10 +9,10 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
   
     if(!empty($address) && !empty($contact_number)){
       $conn = dbconnect();
-      if(update_user_personal_details($conn, $address, $contact_number)){
-        $message = "User personal details updated successfully.";
+      if(update_user_personal_details($conn, $address, $contact_number, $_SESSION["role"])){
+        echo "<script>alert('User personal details updated successfully..'); window.location = './users-profile.php';</script>";
       }else{
-        $message = "Failed to update user personal details.";
+        echo "<script>alert('Failed to update user personal details.');</script>";
       }
     }
     return;
@@ -28,7 +28,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     } else {
         $conn = dbconnect();
 
-        if (update_user_personal_password($conn, $_SESSION["id"], $old_password, $new_password)) {
+        if (update_user_personal_password($conn, $_SESSION["id"], $old_password, $new_password, $_SESSION["role"])) {
             echo "<script>alert('Password updated successfully.');</script>";
         } else {
             echo "<script>alert('Incorrect current password or update failed.');</script>";
@@ -329,7 +329,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="components-alerts.html">
+            <a href="stocks-management.php">
               <i class="bi bi-circle"></i><span>Stock Tracking</span>
             </a>
           </li>
@@ -339,65 +339,10 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             </a>
           </li>
           <li>
-            <a href="components-badges.html">
+            <a href="supplier-management.php">
               <i class="bi bi-circle"></i><span>Supplier Management</span>
             </a>
           </li>
-          <!-- <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Buttons</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Cards</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-carousel.html">
-              <i class="bi bi-circle"></i><span>Carousel</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-list-group.html">
-              <i class="bi bi-circle"></i><span>List group</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-modal.html">
-              <i class="bi bi-circle"></i><span>Modal</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tabs.html">
-              <i class="bi bi-circle"></i><span>Tabs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-pagination.html">
-              <i class="bi bi-circle"></i><span>Pagination</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-progress.html">
-              <i class="bi bi-circle"></i><span>Progress</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-spinners.html">
-              <i class="bi bi-circle"></i><span>Spinners</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-tooltips.html">
-              <i class="bi bi-circle"></i><span>Tooltips</span>
-            </a>
-          </li> -->
         </ul>
       </li><!-- End Components Nav -->
 
@@ -411,21 +356,6 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
               <i class="bi bi-circle"></i><span>Delivery Orders</span>
             </a>
           </li>
-          <!-- <li>
-            <a href="forms-layouts.html">
-              <i class="bi bi-circle"></i><span>Form Layouts</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
-            </a>
-          </li>
-          <li>
-            <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
-            </a>
-          </li> -->
         </ul>
       </li><!-- End Forms Nav -->
 
@@ -636,7 +566,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
                     echo "<div class='alert alert-success'>$message</div>";
                    }
                    ?>
-                  <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>">
+                  <form method="POST" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])?>">
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">

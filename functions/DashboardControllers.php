@@ -6,19 +6,18 @@
  * 2. Load dashboard
  */
 
- session_start(); 
 
- function index($conn) {
+ function index($conn, $username, $role) {
      // 1. Get all necessary data to load in dashboard
      return [
          'title' => 'Dashboard',
-         'user' => get_user($conn, $_SESSION["username"]),
+         'user' => get_user($conn, $username, $role),
      ];
  }
  
- function get_user($conn, $username) {
+ function get_user($conn, $username, $role) {
      // Check if the session role is set and use it to decide the table
-     $table = isset($_SESSION["role"]) && !empty($_SESSION["role"]) ? 'employees' : 'customers';
+     $table = isset($role) && !empty($role) ? 'employees' : 'customers';
  
      try {
          // Prepare the SQL query
@@ -43,8 +42,8 @@
 
 
 //  Update Method for users profile page
-function update_user_personal_details($conn, $address, $contact_number){
-    $table = isset($_SESSION["role"]) && !empty($_SESSION["role"]) ? 'employees' : 'customers';
+function update_user_personal_details($conn, $address, $contact_number, $role){
+    $table = isset($role) && !empty($role) ? 'employees' : 'customers';
 
     try{
         $query = "UPDATE $table SET address = :address, contact_number= :contact_number";
@@ -59,8 +58,8 @@ function update_user_personal_details($conn, $address, $contact_number){
     }
 }
 
-function update_user_personal_password($conn, $id, $current_password, $new_password) {
-    $table = isset($_SESSION["role"]) && !empty($_SESSION["role"]) ? 'employees' : 'customers';
+function update_user_personal_password($conn, $id, $current_password, $new_password, $role) {
+    $table = isset($role) && !empty($role) ? 'employees' : 'customers';
     $id_column = $table === 'employees' ? 'employee_id' : 'customer_id';
 
     try {
