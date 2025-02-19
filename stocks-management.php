@@ -9,9 +9,9 @@ $suppliers = get_suppliers($conn);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if (isset($_POST["add-stocks"])) {
-      require_once('functions/StocksController.php');
+      require_once('functions/StocksControllers.php');
       $conn = dbconnect();
-      $item_name = htmlspecialchars(trim($user['item_name']));
+      $item_name = htmlspecialchars(trim($_POST['item_name']));
       $category = htmlspecialchars(trim($_POST["category"]));
       $stock_quantity = htmlspecialchars(trim($_POST["stock_quantity"]));
       $unit_price = htmlspecialchars(trim($_POST["unit_price"]));
@@ -474,7 +474,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <h5 class="card-title">New Item Form</h5>
 
               <!-- Floating Labels Form -->
-              <form class="row g-3">
+              <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
                 <div class="col-md-12">
                   <div class="form-floating">
                     <input type="text" class="form-control" id="floatingName" disabled value="<?=htmlspecialchars(ucfirst($user["firstname"] ." " . $user["lastname"] ))?>">

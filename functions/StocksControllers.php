@@ -23,7 +23,7 @@ function insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_pr
 
     try {
         $sql = "INSERT INTO `inventory`(item_name, category, stock_quantity, unit_price, employee_id, supplier_id)
-                VALUES(:item_name, :category, :stock_quantity, :unit_price, :employee_id, :supplier_id";
+                VALUES(:item_name, :category, :stock_quantity, :unit_price, :employee_id, :supplier_id)";  // Fixed the missing parenthesis
         $stmt = $conn->prepare($sql);
 
         $stmt->bindParam(':item_name', $item_name);
@@ -43,3 +43,4 @@ function insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_pr
         return false; // SQL error occurred
     }
 }
+
