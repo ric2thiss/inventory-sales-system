@@ -44,3 +44,19 @@ function insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_pr
     }
 }
 
+function get_inventory($conn){
+    try{
+        $sql = "SELECT * FROM inventory";
+        $stmt = $conn->prepare($sql);
+        if($stmt->execute()){
+            $inventory = $stmt->fetchAll();
+            return $inventory;
+        }else{
+            return null;
+        }
+        
+    }catch(PDOException $error){
+        echo $error->getMessage();
+    }
+}
+

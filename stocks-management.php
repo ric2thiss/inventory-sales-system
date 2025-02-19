@@ -2,14 +2,18 @@
 
 require_once("inc.headers.php");
 require_once('functions/SupplierControllers.php');
+require_once('functions/StocksControllers.php');
 $conn = dbconnect();
 
 $suppliers = get_suppliers($conn);
+$inventory = get_inventory($conn);
+
+
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if (isset($_POST["add-stocks"])) {
-      require_once('functions/StocksControllers.php');
+      
       $conn = dbconnect();
       $item_name = htmlspecialchars(trim($_POST['item_name']));
       $category = htmlspecialchars(trim($_POST["category"]));
@@ -20,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
       // Call function and check if it was successful
       if (insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_price, $employee_id, $supplier_id)) {
-          echo "<script>alert('New item added successfully.');</script>";
+          echo "<script>alert('New item added successfully.'); window.location = 'stocks-management.php';</script>";
       }
   } else {
       echo "<script>alert('Invalid request');</script>";
@@ -546,7 +550,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title">Bottle</h5>
-                    <h1>1</h1>
+                    <h1>
+                      <?php
+                        $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
+                        echo $count;
+                      ?>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -556,7 +565,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title">Gallon</h5>
-                    <h1>2</h1>
+                    <h1>
+                      <?php
+                        $count = array_count_values(array_column($inventory, 'category'))['gallon'] ?? 0;
+                        echo $count;
+                      ?>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -566,7 +580,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title">Filter</h5>
-                    <h1>3</h1>
+                    <h1>
+                      <?php
+                        $count = array_count_values(array_column($inventory, 'category'))['filter'] ?? 0;
+                        echo $count;
+                      ?>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -576,7 +595,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="card-title">Supply</h5>
-                    <h1>4</h1>
+                    <h1>
+                      <?php
+                        $count = array_count_values(array_column($inventory, 'category'))['supply'] ?? 0;
+                        echo $count;
+                      ?>
+                    </h1>
                 </div>
             </div>
         </div>
