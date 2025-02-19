@@ -552,8 +552,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h5 class="card-title">Bottle</h5>
                     <h1>
                       <?php
-                        $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
-                        echo $count;
+                        // $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
+                        // echo $count;
+                        $total_stock = 0;
+
+                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                            if ($inventory[$i]['category'] === 'bottle') {
+                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                            }
+                        }
+
+                        echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -567,8 +576,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h5 class="card-title">Gallon</h5>
                     <h1>
                       <?php
-                        $count = array_count_values(array_column($inventory, 'category'))['gallon'] ?? 0;
-                        echo $count;
+                        // $count = array_count_values(array_column($inventory, 'category'))['gallon'] ?? 0;
+                        // echo $count;
+
+                        $total_stock = 0;
+
+                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                            if ($inventory[$i]['category'] === 'gallon') {
+                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                            }
+                        }
+
+                        echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -582,8 +601,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h5 class="card-title">Filter</h5>
                     <h1>
                       <?php
-                        $count = array_count_values(array_column($inventory, 'category'))['filter'] ?? 0;
-                        echo $count;
+                        // $count = array_count_values(array_column($inventory, 'category'))['filter'] ?? 0;
+                        // echo $count;
+
+                        $total_stock = 0;
+
+                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                            if ($inventory[$i]['category'] === 'gallon') {
+                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                            }
+                        }
+
+                        echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -597,8 +626,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h5 class="card-title">Supply</h5>
                     <h1>
                       <?php
-                        $count = array_count_values(array_column($inventory, 'category'))['supply'] ?? 0;
-                        echo $count;
+                        // $count = array_count_values(array_column($inventory, 'category'))['supply'] ?? 0;
+                        // echo $count;
+
+                        $total_stock = 0;
+
+                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                            if ($inventory[$i]['category'] === 'gallon') {
+                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                            }
+                        }
+
+                        echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -609,7 +648,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title">Plate</h5>
+                    <h5 class="card-title">Item</h5>
                     <h1>5</h1>
                 </div>
             </div>
@@ -617,7 +656,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5 class="card-title">Plate</h5>
+                    <h5 class="card-title">Item</h5>
                     <h1>5</h1>
                 </div>
             </div>
