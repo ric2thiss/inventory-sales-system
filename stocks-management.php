@@ -1,6 +1,31 @@
 <?php
 
 require_once("inc.headers.php");
+require_once('functions/SupplierControllers.php');
+$conn = dbconnect();
+
+$suppliers = get_suppliers($conn);
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if (isset($_POST["add-stocks"])) {
+      require_once('functions/StocksController.php');
+      $conn = dbconnect();
+      $item_name = htmlspecialchars(trim($user['item_name']));
+      $category = htmlspecialchars(trim($_POST["category"]));
+      $stock_quantity = htmlspecialchars(trim($_POST["stock_quantity"]));
+      $unit_price = htmlspecialchars(trim($_POST["unit_price"]));
+      $employee_id = htmlspecialchars(trim($user['employee_id']));
+      $supplier_id = htmlspecialchars(trim($_POST["supplier_id"]));
+
+      // Call function and check if it was successful
+      if (insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_price, $employee_id, $supplier_id)) {
+          echo "<script>alert('New item added successfully.');</script>";
+      }
+  } else {
+      echo "<script>alert('Invalid request');</script>";
+  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -306,61 +331,7 @@ require_once("inc.headers.php");
             <i class="bi bi-circle"></i><span>Supplier Management</span>
           </a>
         </li>
-        <!-- <li>
-          <a href="components-breadcrumbs.html">
-            <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-buttons.html">
-            <i class="bi bi-circle"></i><span>Buttons</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-cards.html">
-            <i class="bi bi-circle"></i><span>Cards</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-carousel.html">
-            <i class="bi bi-circle"></i><span>Carousel</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-list-group.html">
-            <i class="bi bi-circle"></i><span>List group</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-modal.html">
-            <i class="bi bi-circle"></i><span>Modal</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-tabs.html">
-            <i class="bi bi-circle"></i><span>Tabs</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-pagination.html">
-            <i class="bi bi-circle"></i><span>Pagination</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-progress.html">
-            <i class="bi bi-circle"></i><span>Progress</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-spinners.html">
-            <i class="bi bi-circle"></i><span>Spinners</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-tooltips.html">
-            <i class="bi bi-circle"></i><span>Tooltips</span>
-          </a>
-        </li> -->
+
       </ul>
     </li><!-- End Components Nav -->
 
@@ -374,21 +345,7 @@ require_once("inc.headers.php");
             <i class="bi bi-circle"></i><span>Delivery Orders</span>
           </a>
         </li>
-        <!-- <li>
-          <a href="forms-layouts.html">
-            <i class="bi bi-circle"></i><span>Form Layouts</span>
-          </a>
-        </li>
-        <li>
-          <a href="forms-editors.html">
-            <i class="bi bi-circle"></i><span>Form Editors</span>
-          </a>
-        </li>
-        <li>
-          <a href="forms-validation.html">
-            <i class="bi bi-circle"></i><span>Form Validation</span>
-          </a>
-        </li> -->
+
       </ul>
     </li><!-- End Forms Nav -->
 
@@ -526,16 +483,17 @@ require_once("inc.headers.php");
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingItemName" placeholder="Item Name">
+                    <input type="text" name="item_name" class="form-control" id="floatingItemName" placeholder="Item Name">
                     <label for="floatingItemName">Item Name</label>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="State">
-                      <option selected>New York</option>
-                      <option value="1">Oregon</option>
-                      <option value="2">DC</option>
+                    <select class="form-select" name="supplier_id" id="floatingSupplierName" aria-label="State">
+                    <option selected>Select</option>
+                      <?php foreach($suppliers as $supplier): ?>
+                      <option value="<?=$supplier['supplier_id']?>"><?=$supplier['supplier_name']?></option>
+                      <?php endforeach ?>
                     </select>
                     <label for="floatingSupplierName">Supplier Name</label>
                   </div>
@@ -543,30 +501,30 @@ require_once("inc.headers.php");
                 <div class="col-md-6">
                   <div class="col-md-12">
                     <div class="form-floating">
-                      <input type="number" class="form-control" id="floatingUnitPrice" placeholder="Unit Price">
+                      <input type="number" name="unit_price" class="form-control" id="floatingUnitPrice" placeholder="Unit Price">
                       <label for="floatingUnitPrice">Unit Price</label>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-floating mb-3">
-                    <select class="form-select" id="floatingCategory" aria-label="Category">
-                      <option selected>Gallon</option>
-                      <option value="1">Bottle</option>
-                      <option value="2">Filter</option>
-                      <option value="2">Supply</option>
+                    <select class="form-select" name="category" id="floatingCategory" aria-label="Category">
+                      <option value="gallon" selected>Gallon</option>
+                      <option value="bottle">Bottle</option>
+                      <option value="filter">Filter</option>
+                      <option value="supply">Supply</option>
                     </select>
                     <label for="floatingCategory">Category</label>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                    <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
                     <label for="floatingStockQuantity">Quantity</label>
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" name="add-stocks" class="btn btn-primary">Submit</button>
                   <button type="reset" class="btn btn-secondary">Reset</button>
                 </div>
               </form><!-- End floating Labels Form -->
