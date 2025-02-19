@@ -16,8 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       // Call function and check if it was successful
       if (insert_supplier($conn, $employee_id, $supplier_name, $contact_person, $contact_number, $address)) {
           echo "<script>alert('Supplier added successfully.');</script>";
-      } else {
-          echo "<script>alert('There was a problem with the server. Please try again later.');</script>";
       }
   } else {
       echo "<script>alert('Invalid request');</script>";
@@ -536,10 +534,16 @@ $suppliers = get_suppliers($conn);
             <th scope="col">Contact Person</th>
             <th scope="col">Contact No.</th>
             <th scope="col">Address</th>
-            <th scope="col">Created_At</th>
+            <th scope="col">Created</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
+          <?php if(empty($suppliers)): ?>
+            <tr>
+              <td colspan="7" class="text-center">No Suppliers Found</td>
+            </tr>
+          <?php endif ?>
           <?php foreach($suppliers as $supplier): ?>
           <tr>
             <th scope="row"><?=$supplier["supplier_id"]?></th>
@@ -547,7 +551,11 @@ $suppliers = get_suppliers($conn);
             <td><?=$supplier["contact_person"]?></td>
             <td><?=$supplier["contact_number"]?></td>
             <td><?=$supplier["address"]?></td>
-            <td><?=$supplier["created_at"]?></td>
+            <td><?= date("d F Y, g:iA", strtotime($supplier["created_at"])) ?></td>
+            <td>
+              <a href="edit-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bx bxs-edit"></i></a>
+              <a href="delete-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bi bi-trash"></i></i></a>
+            </td>
           </tr>
           <?php endforeach; ?>
         </tbody>
