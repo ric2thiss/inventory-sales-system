@@ -42,3 +42,6 @@ function insert_supplier($conn, $employee_id, $supplier_name, $contact_person, $
         return false; // SQL error occurred
     }
 }
+
+
+#this is my changes!!
