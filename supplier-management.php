@@ -521,50 +521,50 @@ $suppliers = get_suppliers($conn);
 
 
   <div class="card mt-3">
-  <div class="card-body">
-    <h5 class="card-title">Suppliers</h5>
+    <div class="card-body">
+      <h5 class="card-title">Suppliers</h5>
 
-    <!-- Responsive Table -->
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Supplier</th>
-            <th scope="col">Contact Person</th>
-            <th scope="col">Contact No.</th>
-            <th scope="col">Address</th>
-            <th scope="col">Created</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if(empty($suppliers)): ?>
+      <!-- Responsive Table -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
             <tr>
-              <td colspan="7" class="text-center">No Suppliers Found</td>
+              <th scope="col">#</th>
+              <th scope="col">Supplier</th>
+              <th scope="col">Contact Person</th>
+              <th scope="col">Contact No.</th>
+              <th scope="col">Address</th>
+              <th scope="col">Created</th>
+              <th scope="col">Action</th>
             </tr>
-          <?php endif ?>
-          <?php foreach($suppliers as $supplier): ?>
-          <tr>
-            <th scope="row"><?=$supplier["supplier_id"]?></th>
-            <td><?=$supplier["supplier_name"]?></td>
-            <td><?=$supplier["contact_person"]?></td>
-            <td><?=$supplier["contact_number"]?></td>
-            <td><?=$supplier["address"]?></td>
-            <td><?= date("d F Y, g:iA", strtotime($supplier["created_at"])) ?></td>
-            <td>
-              <a href="edit-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bx bxs-edit"></i></a>
-              <a href="delete-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bi bi-trash"></i></i></a>
-            </td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </div>
-    <!-- End Responsive Table -->
+          </thead>
+          <tbody>
+            <?php if(empty($suppliers)): ?>
+              <tr>
+                <td colspan="7" class="text-center">No Suppliers Found</td>
+              </tr>
+            <?php endif ?>
+            <?php foreach($suppliers as $supplier): ?>
+            <tr>
+              <th scope="row"><?=$supplier["supplier_id"]?></th>
+              <td><?=$supplier["supplier_name"]?></td>
+              <td><?=$supplier["contact_person"]?></td>
+              <td><?=$supplier["contact_number"]?></td>
+              <td><?=$supplier["address"]?></td>
+              <td><?= date("d F Y, g:iA", strtotime($supplier["created_at"])) ?></td>
+              <td>
+                <a href="edit-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bx bxs-edit"></i></a>
+                <a href="delete-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bi bi-trash"></i></i></a>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <!-- End Responsive Table -->
 
+    </div>
   </div>
-</div>
 
 
 

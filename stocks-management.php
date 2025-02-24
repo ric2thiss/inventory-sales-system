@@ -6,8 +6,8 @@ require_once('functions/StocksControllers.php');
 $conn = dbconnect();
 
 $suppliers = get_suppliers($conn);
-$inventory = get_inventory($conn);
-
+$inventoryList = get_inventory($conn);
+$categories = get_category($conn, "all");
 
 
 
@@ -16,17 +16,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       
       $conn = dbconnect();
       $item_name = htmlspecialchars(trim($_POST['item_name']));
-      $category = htmlspecialchars(trim($_POST["category"]));
+      $category_id = htmlspecialchars(trim($_POST["category_id"]));
       $stock_quantity = htmlspecialchars(trim($_POST["stock_quantity"]));
       $unit_price = htmlspecialchars(trim($_POST["unit_price"]));
       $employee_id = htmlspecialchars(trim($user['employee_id']));
       $supplier_id = htmlspecialchars(trim($_POST["supplier_id"]));
 
       // Call function and check if it was successful
-      if (insert_inventory($conn, $item_name, $category, $stock_quantity,$unit_price, $employee_id, $supplier_id)) {
+      if (insert_inventory($conn, $item_name, $category_id, $stock_quantity,$unit_price, $employee_id, $supplier_id)) {
           echo "<script>alert('New item added successfully.'); window.location = 'stocks-management.php';</script>";
       }
-  } else {
+  }else if(isset($_POST["add-category"])){
+    $conn = dbconnect();
+    $category_name = htmlspecialchars(trim($_POST["category_name"]));
+
+    if(insert_category($conn, $category_name)){
+      echo "<script>alert('New category added successfully.'); window.location = 'stocks-management.php';</script>";
+    }else{
+      echo "<script>alert('Failed to add category.'); window.location = 'stocks-management.php';</script>";
+    }
+
+  }else {
       echo "<script>alert('Invalid request');</script>";
   }
 }
@@ -62,14 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -459,10 +461,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <section class="section">
       <!-- Large Modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-stock">
-        New Item
+        Add Item
     </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
-        Add Stock
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category">
+        Add Category
     </button>
 
     <div class="modal fade" id="add-stock" tabindex="-1">
@@ -475,7 +477,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="modal-body">
                   <!-- Start form -->
             
-              <h5 class="card-title">New Item Form</h5>
+              <h5 class="card-title">Add Item</h5>
 
               <!-- Floating Labels Form -->
               <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
@@ -512,12 +514,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 <div class="col-md-4">
                   <div class="form-floating mb-3">
-                    <select class="form-select" name="category" id="floatingCategory" aria-label="Category">
-                      <option value="gallon" selected>Gallon</option>
+                    <select class="form-select" name="category_id" id="floatingCategory" aria-label="Category">
+                      <!-- <option value="gallon" selected>Gallon</option>
                       <option value="bottle">Bottle</option>
                       <option value="filter">Filter</option>
-                      <option value="supply">Supply</option>
+                      <option value="supply">Supply</option> -->
+
+                      <?php if(empty($categories)) :?>
+                        <option value="" selected>No Category Listed</option>
+                      <?php else: ?>
+                        <?php foreach($categories as $category): ?>
+                          <option value="<?=$category['category_id']?>"><?=$category['category_name']?></option>
+                          <?php endforeach ?>
+                        <?php endif ?>
                     </select>
+
+  
                     <label for="floatingCategory">Category</label>
                   </div>
                 </div>
@@ -527,7 +539,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <label for="floatingStockQuantity">Quantity</label>
                   </div>
                 </div>
-                <div class="text-center">
+                <div class="text-end">
                   <button type="submit" name="add-stocks" class="btn btn-primary">Submit</button>
                   <button type="reset" class="btn btn-secondary">Reset</button>
                 </div>
@@ -542,7 +554,65 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div> -->
             </div>
         </div>
-    </div><!-- End Large Modal-->
+    </div>
+    <!-- Add New Item Modal :  End Large Modal-->
+    <div class="modal fade" id="add-category" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inventory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Start form -->
+            
+              <h5 class="card-title">Add Category</h5>
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
+                <div class="col-md-12">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="floatingName" disabled value="<?=htmlspecialchars(ucfirst($user["firstname"] ." " . $user["lastname"] ))?>">
+                    <label for="floatingName">Employee Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" name="category_name" id="floatingName">
+                    <label for="floatingName">Category Name</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <select class="form-select" id="floatingSupplierName" aria-label="State">
+                      <?php if(empty($categories)):?>
+                      <option selected>No Category Listed</option>
+                      <?php else: ?>
+                      <?php foreach($categories as $category): ?>
+                      <option value="<?=htmlspecialchars($category["category_id"])?>"><?=htmlspecialchars($category["category_name"])?></option>
+                      <?php endforeach ?>
+                      <?php endif ?>
+                    </select>
+                    <label for="floatingSupplierName">Category List</label>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <button type="submit" name="add-category" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+
+                   <!-- End form -->
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- Category Modal : End Large Modal-->
     <div class="row">
         
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
@@ -554,15 +624,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                       <?php
                         // $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
                         // echo $count;
-                        $total_stock = 0;
+                        // $total_stock = 0;
 
-                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                            if ($inventory[$i]['category'] === 'bottle') {
-                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                            }
-                        }
+                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                        //     if ($inventory[$i]['category'] === 'bottle') {
+                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                        //     }
+                        // }
 
-                        echo $total_stock;
+                        // echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -579,15 +649,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // $count = array_count_values(array_column($inventory, 'category'))['gallon'] ?? 0;
                         // echo $count;
 
-                        $total_stock = 0;
+                        // $total_stock = 0;
 
-                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                            if ($inventory[$i]['category'] === 'gallon') {
-                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                            }
-                        }
+                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                        //     if ($inventory[$i]['category'] === 'gallon') {
+                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                        //     }
+                        // }
 
-                        echo $total_stock;
+                        // echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -604,15 +674,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // $count = array_count_values(array_column($inventory, 'category'))['filter'] ?? 0;
                         // echo $count;
 
-                        $total_stock = 0;
+                        // $total_stock = 0;
 
-                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                            if ($inventory[$i]['category'] === 'gallon') {
-                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                            }
-                        }
+                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                        //     if ($inventory[$i]['category'] === 'gallon') {
+                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                        //     }
+                        // }
 
-                        echo $total_stock;
+                        // echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -629,15 +699,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         // $count = array_count_values(array_column($inventory, 'category'))['supply'] ?? 0;
                         // echo $count;
 
-                        $total_stock = 0;
+                        // $total_stock = 0;
 
-                        for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                            if ($inventory[$i]['category'] === 'gallon') {
-                                $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                            }
-                        }
+                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                        //     if ($inventory[$i]['category'] === 'gallon') {
+                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                        //     }
+                        // }
 
-                        echo $total_stock;
+                        // echo $total_stock;
                       ?>
                     </h1>
                 </div>
@@ -653,6 +723,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
             </div>
         </div>
+
         <div class="col-lg-2 col-md-3 col-sm-6 col-6">
             <div class="card mt-3">
                 <div class="card-body">
@@ -663,6 +734,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
         
     </div>
+    <div class="card mt-3">
+    <div class="card-body">
+      <h5 class="card-title">Stocked Items</h5>
+
+      <!-- Responsive Table -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Item Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Stock Quantity</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Listed By</th>
+              <th scope="col">Date</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if(empty($inventoryList)): ?>
+              <tr>
+                <td colspan="7" class="text-center">No List Found</td>
+              </tr>
+            <?php endif ?>
+            <?php foreach($inventoryList as $inventory): ?>
+            <tr>
+              <th scope="row"><?=$inventory["inventory_id"]?></th>
+              <td><?=$inventory["item_name"]?></td>
+              <td><?=$inventory["category_name"]?></td>
+              <td><?=$inventory["stock_quantity"]?></td>
+              <td><?=$inventory["unit_price"]?></td>
+              <td><?=$inventory["firstname"]?> <?=$inventory["firstname"]?></td>
+              <td><?= date("d F Y, g:iA", strtotime($inventory["last_updated"])) ?></td>
+              <td>
+                <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit"></i></a>
+                <a href="delete-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bi bi-trash"></i></i></a>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <!-- End Responsive Table -->
+
+    </div>
+  </div>
 </section>
 
 
