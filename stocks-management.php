@@ -8,6 +8,7 @@ $conn = dbconnect();
 $suppliers = get_suppliers($conn);
 $inventoryList = get_inventory($conn);
 $categories = get_category($conn, "all");
+$category_count = get_category_count($conn);
 
 
 
@@ -613,84 +614,111 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
     <!-- Category Modal : End Large Modal-->
-    <div class="row">
-        <?php foreach($categories as $category): ?>
+    <!-- <div class="row">
+        <?php foreach($category_count as $category): ?>
           <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-              <!-- Card 1 -->
+      
               <div class="card mt-3">
                   <div class="card-body">
-                      <h5 class="card-title"><?=$category["category_name"]?></h5>
+                      <h5 class="card-title"><?=$category["category_name"]?> | <?=$category["item_count"]?></h5>
                       <h1>
-                        <?php
-                          // $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
-                          // echo $count;
-                          // $total_stock = 0;
-
-                          // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                          //     if ($inventory[$i]['category'] === 'bottle') {
-                          //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                          //     }
-                          // }
-
-                          // echo $total_stock;
-                        ?>
+                        <?=$category["total_unit_price"]?> | <?=$category["total_stock_quantity"]?>
                       </h1>
                   </div>
               </div>
           </div>
         <?php endforeach?>
+    </div> -->
 
-        
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5 class="card-title">Category</h5>
+
+        <!-- Responsive Table -->
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Category</th>
+                <th scope="col">List</th>
+                <th scope="col">Total Purchased</th>
+                <th scope="col">Stock Quantity</th>
+                <!-- <th scope="col">Date</th> -->
+                <!-- <th scope="col">Action</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <?php if(empty($category_count)): ?>
+                <tr>
+                  <td colspan="7" class="text-center">No List Found</td>
+                </tr>
+              <?php endif ?>
+              <?php foreach($category_count as $category): ?>
+              <tr>
+                <th scope="row"><?=$category["category_id"]?></th>
+                <td><?=$category["category_name"]?></td>
+                <td><?=$category["item_count"]?></td>
+                <td><?=$category["total_unit_price"]?></td>
+                <td><?=$category["total_stock_quantity"]?></td>             
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+        <!-- End Responsive Table -->
+
+      </div>
     </div>
     <div class="card mt-3">
-    <div class="card-body">
-      <h5 class="card-title">Stocked Items</h5>
+      <div class="card-body">
+        <h5 class="card-title">Stocked Items</h5>
 
-      <!-- Responsive Table -->
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Supplier</th>
-              <th scope="col">Item Name</th>
-              <th scope="col">Category</th>
-              <th scope="col">Stock Quantity</th>
-              <th scope="col">Unit Price</th>
-              <th scope="col">Employee</th>
-              <th scope="col">Date</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php if(empty($inventoryList)): ?>
+        <!-- Responsive Table -->
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                <td colspan="7" class="text-center">No List Found</td>
+                <th scope="col">#</th>
+                <th scope="col">Supplier</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Stock Quantity</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">Employee</th>
+                <th scope="col">Date</th>
+                <th scope="col">Action</th>
               </tr>
-            <?php endif ?>
-            <?php foreach($inventoryList as $inventory): ?>
-            <tr>
-              <th scope="row"><?=$inventory["inventory_id"]?></th>
-              <td><?=$inventory["supplier_name"]?></td>
-              <td><?=$inventory["item_name"]?></td>
-              <td><?=$inventory["category_name"]?></td>
-              <td><?=$inventory["stock_quantity"]?></td>
-              <td><?=$inventory["unit_price"]?></td>
-              <td><?=$inventory["firstname"]?> <?=$inventory["lastname"]?></td>
-              <td><?= date("d F Y, g:iA", strtotime($inventory["last_updated"])) ?></td>
-              <td>
-                <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit"></i></a>
-                <a href="delete-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bi bi-trash"></i></i></a>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-      <!-- End Responsive Table -->
+            </thead>
+            <tbody>
+              <?php if(empty($inventoryList)): ?>
+                <tr>
+                  <td colspan="7" class="text-center">No List Found</td>
+                </tr>
+              <?php endif ?>
+              <?php foreach($inventoryList as $inventory): ?>
+              <tr>
+                <th scope="row"><?=$inventory["inventory_id"]?></th>
+                <td><?=$inventory["supplier_name"]?></td>
+                <td><?=$inventory["item_name"]?></td>
+                <td><?=$inventory["category_name"]?></td>
+                <td><?=$inventory["stock_quantity"]?></td>
+                <td><?=$inventory["unit_price"]?></td>
+                <td><?=$inventory["firstname"]?> <?=$inventory["lastname"]?></td>
+                <td><?= date("d F Y, g:iA", strtotime($inventory["last_updated"])) ?></td>
+                <td>
+                  <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit"></i></a>
+                  <a href="delete-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bi bi-trash"></i></i></a>
+                </td>
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+        <!-- End Responsive Table -->
 
+      </div>
     </div>
-  </div>
 </section>
 
 

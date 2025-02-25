@@ -44,23 +44,59 @@ function insert_inventory($conn, $item_name, $category_id, $stock_quantity,$unit
     }
 }
 
+function get_category_count($conn) {
+    try {
+        $sql = "SELECT 
+            inventory.category_id,
+            category.category_name, 
+            COUNT(inventory.inventory_id) AS item_count, 
+            COALESCE(SUM(inventory.unit_price), 0) AS total_unit_price, 
+            COALESCE(SUM(inventory.stock_quantity), 0) AS total_stock_quantity
+        FROM category
+        LEFT JOIN inventory ON category.category_id = inventory.category_id
+        GROUP BY inventory.category_id, category.category_name";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $error) {
+        echo $error->getMessage();
+    }
+}
+
 function get_inventory($conn){
     try{
+        // $sql = "SELECT 
+        //             inventory.inventory_id,
+        //             inventory.item_name,
+        //             inventory.category_id,
+        //             inventory.stock_quantity,
+        //             inventory.unit_price,
+        //             inventory.last_updated,
+        //             category.category_name,
+        //             employees.firstname,
+        //             employees.lastname,
+        //             suppliers.supplier_name
+        //         FROM inventory
+        //         LEFT JOIN category ON category.category_id = inventory.category_id
+        //         LEFT JOIN employees ON employees.employee_id = inventory.employee_id
+        //         LEFT JOIN suppliers ON suppliers.supplier_id = inventory.supplier_id";
         $sql = "SELECT 
-                    inventory.inventory_id,
-                    inventory.item_name,
-                    inventory.category_id,
-                    inventory.stock_quantity,
-                    inventory.unit_price,
-                    inventory.last_updated,
-                    category.category_name,
-                    employees.firstname,
-                    employees.lastname,
-                    suppliers.supplier_name
-                FROM inventory
-                LEFT JOIN category ON category.category_id = inventory.category_id
-                LEFT JOIN employees ON employees.employee_id = inventory.employee_id
-                LEFT JOIN suppliers ON suppliers.supplier_id = inventory.supplier_id";
+            inventory.inventory_id,
+            inventory.item_name,
+            inventory.category_id,
+            inventory.stock_quantity,
+            inventory.unit_price,
+            inventory.last_updated,
+            category.category_name,
+            employees.firstname,
+            employees.lastname,
+            suppliers.supplier_name,
+            COUNT(*) OVER(PARTITION BY inventory.category_id) AS category_count
+        FROM inventory
+        LEFT JOIN category ON category.category_id = inventory.category_id
+        LEFT JOIN employees ON employees.employee_id = inventory.employee_id
+        LEFT JOIN suppliers ON suppliers.supplier_id = inventory.supplier_id";
+
         
         $stmt = $conn->prepare($sql);
         if($stmt->execute()){
