@@ -614,124 +614,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
     <!-- Category Modal : End Large Modal-->
     <div class="row">
-        
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <!-- Card 1 -->
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Bottle</h5>
-                    <h1>
-                      <?php
-                        // $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
-                        // echo $count;
-                        // $total_stock = 0;
+        <?php foreach($categories as $category): ?>
+          <div class="col-lg-2 col-md-3 col-sm-6 col-6">
+              <!-- Card 1 -->
+              <div class="card mt-3">
+                  <div class="card-body">
+                      <h5 class="card-title"><?=$category["category_name"]?></h5>
+                      <h1>
+                        <?php
+                          // $count = array_count_values(array_column($inventory, 'category'))['bottle'] ?? 0;
+                          // echo $count;
+                          // $total_stock = 0;
 
-                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                        //     if ($inventory[$i]['category'] === 'bottle') {
-                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                        //     }
-                        // }
+                          // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
+                          //     if ($inventory[$i]['category'] === 'bottle') {
+                          //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
+                          //     }
+                          // }
 
-                        // echo $total_stock;
-                      ?>
-                    </h1>
-                </div>
-            </div>
-        </div>
+                          // echo $total_stock;
+                        ?>
+                      </h1>
+                  </div>
+              </div>
+          </div>
+        <?php endforeach?>
 
-        <!-- Card 2 -->
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Gallon</h5>
-                    <h1>
-                      <?php
-                        // $count = array_count_values(array_column($inventory, 'category'))['gallon'] ?? 0;
-                        // echo $count;
-
-                        // $total_stock = 0;
-
-                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                        //     if ($inventory[$i]['category'] === 'gallon') {
-                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                        //     }
-                        // }
-
-                        // echo $total_stock;
-                      ?>
-                    </h1>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Filter</h5>
-                    <h1>
-                      <?php
-                        // $count = array_count_values(array_column($inventory, 'category'))['filter'] ?? 0;
-                        // echo $count;
-
-                        // $total_stock = 0;
-
-                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                        //     if ($inventory[$i]['category'] === 'gallon') {
-                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                        //     }
-                        // }
-
-                        // echo $total_stock;
-                      ?>
-                    </h1>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Supply</h5>
-                    <h1>
-                      <?php
-                        // $count = array_count_values(array_column($inventory, 'category'))['supply'] ?? 0;
-                        // echo $count;
-
-                        // $total_stock = 0;
-
-                        // for ($i = 0; $i < count($inventory); $i++) {  // Fix the loop condition
-                        //     if ($inventory[$i]['category'] === 'gallon') {
-                        //         $total_stock += $inventory[$i]['stock_quantity']; // Sum up stock
-                        //     }
-                        // }
-
-                        // echo $total_stock;
-                      ?>
-                    </h1>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Item</h5>
-                    <h1>5</h1>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Item</h5>
-                    <h1>5</h1>
-                </div>
-            </div>
-        </div>
         
     </div>
     <div class="card mt-3">
@@ -744,11 +652,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Supplier</th>
               <th scope="col">Item Name</th>
               <th scope="col">Category</th>
               <th scope="col">Stock Quantity</th>
               <th scope="col">Unit Price</th>
-              <th scope="col">Listed By</th>
+              <th scope="col">Employee</th>
               <th scope="col">Date</th>
               <th scope="col">Action</th>
             </tr>
@@ -762,11 +671,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php foreach($inventoryList as $inventory): ?>
             <tr>
               <th scope="row"><?=$inventory["inventory_id"]?></th>
+              <td><?=$inventory["supplier_name"]?></td>
               <td><?=$inventory["item_name"]?></td>
               <td><?=$inventory["category_name"]?></td>
               <td><?=$inventory["stock_quantity"]?></td>
               <td><?=$inventory["unit_price"]?></td>
-              <td><?=$inventory["firstname"]?> <?=$inventory["firstname"]?></td>
+              <td><?=$inventory["firstname"]?> <?=$inventory["lastname"]?></td>
               <td><?= date("d F Y, g:iA", strtotime($inventory["last_updated"])) ?></td>
               <td>
                 <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit"></i></a>
