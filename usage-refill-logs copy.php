@@ -2,29 +2,6 @@
 
 require_once("inc.headers.php");
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  if (isset($_POST["add-supplier"])) {
-      require_once('functions/SupplierControllers.php');
-      $conn = dbconnect();
-
-      $employee_id = htmlspecialchars(trim($user['employee_id']));
-      $supplier_name = htmlspecialchars(trim($_POST["supplier_name"]));
-      $contact_person = htmlspecialchars(trim($_POST["contact_person"]));
-      $contact_number = htmlspecialchars(trim($_POST["contact_number"]));
-      $address = htmlspecialchars(trim($_POST["address"]));
-
-      // Call function and check if it was successful
-      if (insert_supplier($conn, $employee_id, $supplier_name, $contact_person, $contact_number, $address)) {
-          echo "<script>alert('Supplier added successfully.');</script>";
-      }
-  } else {
-      echo "<script>alert('Invalid request');</script>";
-  }
-}
-require_once('functions/SupplierControllers.php');
-$suppliers = get_suppliers($conn);
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +10,7 @@ $suppliers = get_suppliers($conn);
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Supplier Management</title>
+  <title>Logs</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -315,20 +292,75 @@ $suppliers = get_suppliers($conn);
       </a>
       <ul id="components-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="stocks-management.php">
+          <a href="stocks-management.php" >
             <i class="bi bi-circle"></i><span>Stock Tracking</span>
           </a>
         </li>
         <li>
-          <a href="usage-refill-logs.php">
+          <a href="components-accordion.html" class="active">
             <i class="bi bi-circle"></i><span>Usage & Refill Logs</span>
           </a>
         </li>
         <li>
-          <a href="supplier-management.php" class="active">
+          <a href="supplier-management.php">
             <i class="bi bi-circle"></i><span>Supplier Management</span>
           </a>
         </li>
+        <!-- <li>
+          <a href="components-breadcrumbs.html">
+            <i class="bi bi-circle"></i><span>Breadcrumbs</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-buttons.html">
+            <i class="bi bi-circle"></i><span>Buttons</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-cards.html">
+            <i class="bi bi-circle"></i><span>Cards</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-carousel.html">
+            <i class="bi bi-circle"></i><span>Carousel</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-list-group.html">
+            <i class="bi bi-circle"></i><span>List group</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-modal.html">
+            <i class="bi bi-circle"></i><span>Modal</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-tabs.html">
+            <i class="bi bi-circle"></i><span>Tabs</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-pagination.html">
+            <i class="bi bi-circle"></i><span>Pagination</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-progress.html">
+            <i class="bi bi-circle"></i><span>Progress</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-spinners.html">
+            <i class="bi bi-circle"></i><span>Spinners</span>
+          </a>
+        </li>
+        <li>
+          <a href="components-tooltips.html">
+            <i class="bi bi-circle"></i><span>Tooltips</span>
+          </a>
+        </li> -->
       </ul>
     </li><!-- End Components Nav -->
 
@@ -342,6 +374,21 @@ $suppliers = get_suppliers($conn);
             <i class="bi bi-circle"></i><span>Delivery Orders</span>
           </a>
         </li>
+        <!-- <li>
+          <a href="forms-layouts.html">
+            <i class="bi bi-circle"></i><span>Form Layouts</span>
+          </a>
+        </li>
+        <li>
+          <a href="forms-editors.html">
+            <i class="bi bi-circle"></i><span>Form Editors</span>
+          </a>
+        </li>
+        <li>
+          <a href="forms-validation.html">
+            <i class="bi bi-circle"></i><span>Form Validation</span>
+          </a>
+        </li> -->
       </ul>
     </li><!-- End Forms Nav -->
 
@@ -438,134 +485,16 @@ $suppliers = get_suppliers($conn);
 
 <main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>Inventory Manangement</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item">Inventory</li>
-        <li class="breadcrumb-item active">Supplier Tracking</li>
-      </ol>
-    </nav>
-  </div><!-- End Page Title -->
-
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-supplier">
-        New Supplier
-  </button>
-
-  <div class="modal fade" id="add-supplier" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title">Inventory</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Start form -->
-      
-        <h5 class="card-title">New Supplier Form</h5>
-
-        <!-- Floating Labels Form -->
-        <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
-            <div class="col-md-12">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingName" disabled value="<?= htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"])) ?>">
-                    <label for="floatingName">Employee Name</label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="text" name="supplier_name" class="form-control" id="floatingSupplierName" placeholder="Supplier Name">
-                    <label for="floatingSupplierName">Supplier Name</label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="text" name="contact_person" class="form-control" id="floatingContactPerson" placeholder="Contact Person">
-                    <label for="floatingContactPerson">Contact Person</label>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="col-md-12">
-                    <div class="form-floating">
-                        <input type="number" name="contact_number" class="form-control" id="floatingContactNumber" placeholder="Contact Number">
-                        <label for="floatingContactNumber">Contact No.</label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="col-md-12">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" name="address" id="floatingAddress" placeholder="Address">
-                        <label for="floatingUnitPrice">Address</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center">
-                <button type="submit" name="add-supplier" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
-            </div>
-        </form><!-- End floating Labels Form -->
-
-
-              <!-- End form -->
-          </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div> -->
-      </div>
-    </div>
-  </div><!-- End Large Modal-->
-
-
-  <div class="card mt-3">
-    <div class="card-body">
-      <h5 class="card-title">Suppliers</h5>
-
-      <!-- Responsive Table -->
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Supplier</th>
-              <th scope="col">Contact Person</th>
-              <th scope="col">Contact No.</th>
-              <th scope="col">Address</th>
-              <th scope="col">Created</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php if(empty($suppliers)): ?>
-              <tr>
-                <td colspan="7" class="text-center">No Suppliers Found</td>
-              </tr>
-            <?php endif ?>
-            <?php foreach($suppliers as $supplier): ?>
-            <tr>
-              <th scope="row"><?=$supplier["supplier_id"]?></th>
-              <td><?=$supplier["supplier_name"]?></td>
-              <td><?=$supplier["contact_person"]?></td>
-              <td><?=$supplier["contact_number"]?></td>
-              <td><?=$supplier["address"]?></td>
-              <td><?= date("d F Y, g:iA", strtotime($supplier["created_at"])) ?></td>
-              <td>
-                <a href="edit-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bx bxs-edit"></i></a>
-                <a href="delete-supplier.php?id=<?=$supplier["supplier_id"]?>"><i class="bi bi-trash"></i></i></a>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-      <!-- End Responsive Table -->
-
-    </div>
-  </div>
-
+<div class="pagetitle">
+  <h1>Inventory Manangement</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item">Inventory</li>
+      <li class="breadcrumb-item active">Stock Tracking</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
 
 
 </main><!-- End #main -->
@@ -573,14 +502,14 @@ $suppliers = get_suppliers($conn);
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; <?php $d=  new DateTime(); echo $d->format('Y') ?> <strong><span>AQUA EVAN</span></strong>. Water Refilling Station. All Rights Reserved.
+      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
       <!-- All the links in the footer should remain intact. -->
       <!-- You can delete the links only if you purchased the pro version. -->
       <!-- Licensing information: https://bootstrapmade.com/license/ -->
       <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Developed by <a href="http://ric2thiss.github.io/"> Ric</a>
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </footer><!-- End Footer -->
 

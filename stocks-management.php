@@ -329,7 +329,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </a>
         </li>
         <li>
-          <a href="components-accordion.html">
+          <a href="usage-refill-logs.php">
             <i class="bi bi-circle"></i><span>Usage & Refill Logs</span>
           </a>
         </li>
@@ -642,8 +642,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <th scope="col">#</th>
                 <th scope="col">Category</th>
                 <th scope="col">List</th>
-                <th scope="col">Total Purchased</th>
-                <th scope="col">Stock Quantity</th>
+                <th scope="col">Total</th>
+                <th scope="col">Qty</th>
                 <!-- <th scope="col">Date</th> -->
                 <!-- <th scope="col">Action</th> -->
               </tr>
@@ -683,7 +683,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <th scope="col">Supplier</th>
                 <th scope="col">Item Name</th>
                 <th scope="col">Category</th>
-                <th scope="col">Stock Quantity</th>
+                <th scope="col">Qty.</th>
                 <th scope="col">Unit Price</th>
                 <th scope="col">Employee</th>
                 <th scope="col">Date</th>

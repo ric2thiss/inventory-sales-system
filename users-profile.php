@@ -334,7 +334,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             </a>
           </li>
           <li>
-            <a href="components-accordion.html">
+            <a href="usage-refill-logs.php">
               <i class="bi bi-circle"></i><span>Usage & Refill Logs</span>
             </a>
           </li>

@@ -47,7 +47,7 @@ function insert_inventory($conn, $item_name, $category_id, $stock_quantity,$unit
 function get_category_count($conn) {
     try {
         $sql = "SELECT 
-            inventory.category_id,
+            category.category_id,
             category.category_name, 
             COUNT(inventory.inventory_id) AS item_count, 
             COALESCE(SUM(inventory.unit_price), 0) AS total_unit_price, 
