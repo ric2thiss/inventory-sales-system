@@ -306,61 +306,7 @@ require_once("inc.headers.php");
             <i class="bi bi-circle"></i><span>Supplier Management</span>
           </a>
         </li>
-        <!-- <li>
-          <a href="components-breadcrumbs.html">
-            <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-buttons.html">
-            <i class="bi bi-circle"></i><span>Buttons</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-cards.html">
-            <i class="bi bi-circle"></i><span>Cards</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-carousel.html">
-            <i class="bi bi-circle"></i><span>Carousel</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-list-group.html">
-            <i class="bi bi-circle"></i><span>List group</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-modal.html">
-            <i class="bi bi-circle"></i><span>Modal</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-tabs.html">
-            <i class="bi bi-circle"></i><span>Tabs</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-pagination.html">
-            <i class="bi bi-circle"></i><span>Pagination</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-progress.html">
-            <i class="bi bi-circle"></i><span>Progress</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-spinners.html">
-            <i class="bi bi-circle"></i><span>Spinners</span>
-          </a>
-        </li>
-        <li>
-          <a href="components-tooltips.html">
-            <i class="bi bi-circle"></i><span>Tooltips</span>
-          </a>
-        </li> -->
+       
       </ul>
     </li><!-- End Components Nav -->
 
@@ -374,21 +320,7 @@ require_once("inc.headers.php");
             <i class="bi bi-circle"></i><span>Delivery Orders</span>
           </a>
         </li>
-        <!-- <li>
-          <a href="forms-layouts.html">
-            <i class="bi bi-circle"></i><span>Form Layouts</span>
-          </a>
-        </li>
-        <li>
-          <a href="forms-editors.html">
-            <i class="bi bi-circle"></i><span>Form Editors</span>
-          </a>
-        </li>
-        <li>
-          <a href="forms-validation.html">
-            <i class="bi bi-circle"></i><span>Form Validation</span>
-          </a>
-        </li> -->
+
       </ul>
     </li><!-- End Forms Nav -->
 

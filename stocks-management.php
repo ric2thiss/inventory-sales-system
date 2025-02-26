@@ -304,7 +304,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </ul>
     </nav><!-- End Icons Navigation -->
 
-</header><!-- End Header -->
+</header>
+<!-- End Header -->
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -445,7 +446,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   </ul>
 
-</aside><!-- End Sidebar-->
+</aside>
+<!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -736,7 +738,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
       Developed by <a href="http://ric2thiss.github.io/"> Ric</a>
     </div>
-  </footer><!-- End Footer -->
+  </footer>
+  <!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
