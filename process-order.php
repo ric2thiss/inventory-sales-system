@@ -1,6 +1,8 @@
 <?php
 
 require_once("inc.headers.php");
+require_once('functions/StocksControllers.php');
+$categories = get_category($conn, "all");
 
 ?>
 <!DOCTYPE html>
@@ -10,7 +12,7 @@ require_once("inc.headers.php");
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Logs</title>
+  <title>Billing and Order</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -290,14 +292,14 @@ require_once("inc.headers.php");
       <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-menu-button-wide"></i><span>Inventory Management </span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="components-nav" class="nav-content collapse show " data-bs-parent="#sidebar-nav">
+      <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
           <a href="stocks-management.php" >
             <i class="bi bi-circle"></i><span>Stock Tracking</span>
           </a>
         </li>
         <li>
-          <a href="components-accordion.html" class="active">
+          <a href="usage-refill-logs.php">
             <i class="bi bi-circle"></i><span>Usage & Refill Logs</span>
           </a>
         </li>
@@ -314,7 +316,12 @@ require_once("inc.headers.php");
       <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-journal-text"></i><span>Order Management</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+      <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="process-order.php" class="active">
+          <i class="bi bi-circle"></i><span>Billing and Order</span>
+          </a>
+        </li>
         <li>
           <a href="forms-elements.html">
             <i class="bi bi-circle"></i><span>Delivery Orders</span>
@@ -418,15 +425,145 @@ require_once("inc.headers.php");
 <main id="main" class="main">
 
 <div class="pagetitle">
-  <h1>Inventory Manangement</h1>
+  <h1>Order Management</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-      <li class="breadcrumb-item">Inventory</li>
-      <li class="breadcrumb-item active">Stock Tracking</li>
+      <li class="breadcrumb-item">Order Management</li>
+      <li class="breadcrumb-item active">Billing and Order</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->
+
+<section class="section">
+  <div class="row">
+    <div class="col-md-6">
+      
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Billing - <?=ucfirst($user['role'])?></h5>
+
+          <!-- Vertical Form -->
+          <form class="row g-3">
+            <div class="col-md-12">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="floatingName" disabled value="<?=htmlspecialchars(ucfirst($user["firstname"] ." " . $user["lastname"] ))?>">
+                <label for="floatingName">Employee Name</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <select class="form-select" name="category_id" id="floatingCategory" aria-label="Category">
+                  <option value="">Refill</option>
+                  <option value="">New Bottle</option>
+                </select>
+                <label for="floatingCategory">Additional</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                <label for="floatingStockQuantity">Quantity</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3">
+                <select class="form-select" name="category_id" id="floatingCategory" aria-label="Category">
+                  <?php if(empty($categories)) :?>
+                    <option value="" selected>No Category Listed</option>
+                  <?php else: ?>
+                    <?php foreach($categories as $category): ?>
+                      <option value="<?=$category['category_id']?>"><?=$category['category_name']?></option>
+                      <?php endforeach ?>
+                    <?php endif ?>
+                </select>
+                <label for="floatingCategory">Additional</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                <label for="floatingStockQuantity">Quantity</label>
+              </div>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary" fdprocessedid="tlwky">Set Order</button>
+              <button type="reset" class="btn btn-secondary" fdprocessedid="1dgd0l">Reset</button>
+            </div>
+          </form><!-- Vertical Form -->
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Water Refilling Station - AQUA EVAN</div>
+          
+
+          <!-- Receipt Style -->
+          <div>
+            <p><strong>Employee:</strong> <span><?= htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"])) ?></span></p>
+            <p><strong>Transaction Type:</strong> <span id="orderTypeText">---Walk-In---</span></p>
+            <p><strong>Order Type:</strong> <span id="orderTypeText">---Refill---</span></p>
+            <p><strong>Quantity:</strong> <span id="quantityText">---</span></p>
+            <p><strong>Category:</strong> <span id="categoryText">---</span></p>
+          </div>
+
+          <!-- Hidden Form -->
+          <form class="row g-3 d-none">
+            <div class="col-md-12">
+              <div class="form-floating d-none">
+                <input type="text" class="form-control" id="floatingName" disabled value="<?= htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"])) ?>">
+                <label for="floatingName">Employee Name</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3 d-none">
+                <select class="form-select" name="category_id" id="floatingCategory">
+                  <option value="">Refill</option>
+                  <option value="">New Bottle</option>
+                </select>
+                <label for="floatingCategory">Additional</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating d-none">
+                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity">
+                <label for="floatingStockQuantity">Quantity</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating mb-3 d-none">
+                <select class="form-select" name="category_id" id="floatingCategory">
+                  <?php if (empty($categories)) : ?>
+                    <option value="" selected>No Category Listed</option>
+                  <?php else : ?>
+                    <?php foreach ($categories as $category) : ?>
+                      <option value="<?= $category['category_id'] ?>"><?= $category['category_name'] ?></option>
+                    <?php endforeach ?>
+                  <?php endif ?>
+                </select>
+                <label for="floatingCategory">Additional</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating d-none">
+                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity">
+                <label for="floatingStockQuantity">Quantity</label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
 
 
 </main><!-- End #main -->

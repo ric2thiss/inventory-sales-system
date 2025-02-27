@@ -313,6 +313,11 @@ require_once("inc.headers.php");
     </a>
     <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
       <li>
+        <a href="process-order.php">
+        <i class="bi bi-circle"></i><span>Billing and Order</span>
+        </a>
+      </li>
+      <li>
         <a href="forms-elements.html">
           <i class="bi bi-circle"></i><span>Delivery Orders</span>
         </a>

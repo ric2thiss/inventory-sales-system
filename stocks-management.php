@@ -366,6 +366,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </a>
       <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
+          <a href="process-order.php">
+            <i class="bi bi-circle"></i><span>Billing and Order</span>
+          </a>
+        </li>
+        <li>
           <a href="forms-elements.html">
             <i class="bi bi-circle"></i><span>Delivery Orders</span>
           </a>
@@ -538,11 +543,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="col-md-4">
                   <div class="form-floating mb-3">
                     <select class="form-select" name="category_id" id="floatingCategory" aria-label="Category">
-                      <!-- <option value="gallon" selected>Gallon</option>
-                      <option value="bottle">Bottle</option>
-                      <option value="filter">Filter</option>
-                      <option value="supply">Supply</option> -->
-
                       <?php if(empty($categories)) :?>
                         <option value="" selected>No Category Listed</option>
                       <?php else: ?>
@@ -551,8 +551,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                           <?php endforeach ?>
                         <?php endif ?>
                     </select>
-
-  
                     <label for="floatingCategory">Category</label>
                   </div>
                 </div>
