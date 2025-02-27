@@ -767,29 +767,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Category</th>
-                    <th scope="col">List</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Updated On</th>
+                    <th scope="col">Price</th>
                     <th scope="col">Qty</th>
                     <!-- <th scope="col">Date</th> -->
                     <!-- <th scope="col">Action</th> -->
                   </tr>
                 </thead>
                 <tbody>
-                  <?php if(empty($category_count)): ?>
-                    <tr>
-                      <td colspan="7" class="text-center">No List Found</td>
-                    </tr>
-                  <?php endif ?>
-                  <?php foreach($category_count as $category): ?>
-                  <tr>
-                    <th scope="row"><?=$category["category_id"]?></th>
-                    <td><?=$category["category_name"]?></td>
-                    <td><?=$category["item_count"]?></td>
-                    <td><?=$category["total_unit_price"]?></td>
-                    <td><?=$category["total_stock_quantity"]?></td>             
-                  </tr>
-                  <?php endforeach; ?>
+                  <?php 
+                  $filteredList = array_filter($inventoryList, function($stockout) {
+                      return $stockout['stock_quantity'] < 5;
+                  });
+
+                  if(empty($filteredList)): ?>
+                      <tr>
+                          <td colspan="7" class="text-center">No items are out of stock or running low.</td>
+                      </tr>
+                  <?php else: ?>
+                      <?php foreach($filteredList as $stockout): ?>
+                          <tr>
+                              <th scope="row"><?= $stockout["inventory_id"] ?></th>
+                              <td><?= $stockout["category_name"] ?></td>
+                              <td><?= $stockout["item_name"] ?></td>
+                              <td><?= date("d F Y, g:iA", strtotime($stockout["last_updated"])) ?></td>
+                              <td><?= $stockout["unit_price"] ?></td>
+                              <td><?= $stockout["stock_quantity"] ?></td>
+                          </tr>
+                      <?php endforeach; ?>
+                  <?php endif; ?>
                 </tbody>
+
               </table>
             </div>
             <!-- End Responsive Table -->

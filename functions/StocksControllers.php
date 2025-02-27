@@ -179,6 +179,8 @@ function insert_category($conn, $category_name)
 function re_stock($conn, $item_id, $quantity, $purchase_price)
 {
     try {
+        $conn->beginTransaction(); // Start transaction
+
         // Insert data into stock_in table with supplier_id fetched using a JOIN
         $sql = "INSERT INTO stock_in (inventory_id, supplier_id, quantity_added, purchase_price) 
                 SELECT i.inventory_id, i.supplier_id, :quantity, :purchase_price 
@@ -192,14 +194,29 @@ function re_stock($conn, $item_id, $quantity, $purchase_price)
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
+            // Update inventory table by adding the new stock quantity
+            $updateSql = "UPDATE inventory 
+                          SET stock_quantity = stock_quantity + :quantity 
+                          WHERE inventory_id = :item_id";
+
+            $updateStmt = $conn->prepare($updateSql);
+            $updateStmt->bindParam(':item_id', $item_id, PDO::PARAM_INT);
+            $updateStmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+            $updateStmt->execute();
+
+            $conn->commit(); // Commit transaction
             return true;
         } else {
+            $conn->rollBack(); // Rollback in case of failure
             return false;
         }
     } catch (PDOException $error) {
+        $conn->rollBack(); // Rollback transaction on error
         echo "Error: " . $error->getMessage();
+        return false;
     }
 }
+
 
 
 
