@@ -88,6 +88,7 @@ function get_inventory($conn){
             inventory.unit_price,
             inventory.last_updated,
             category.category_name,
+            employees.role,
             employees.firstname,
             employees.lastname,
             suppliers.supplier_name,

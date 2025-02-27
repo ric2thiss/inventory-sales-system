@@ -718,7 +718,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <!-- Responsive Table -->
                 <div class="table-responsive">
-                  <table class="table table-hover">
+                  <table class="table datatable">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -762,7 +762,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <!-- Responsive Table -->
             <div class="table-responsive">
-              <table class="table table-hover">
+              <table class="table datatable">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -816,7 +816,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <!-- Responsive Table -->
         <div class="table-responsive">
-          <table class="table table-hover">
+          <table class="table datatable">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -844,11 +844,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <td><?=$inventory["category_name"]?></td>
                 <td><?=$inventory["stock_quantity"]?></td>
                 <td><?=$inventory["unit_price"]?></td>
-                <td><?=$inventory["firstname"]?> <?=$inventory["lastname"]?></td>
+                <!-- <td><?=$inventory["firstname"]?> <?=$inventory["lastname"]?></td> -->
+                <td><?=ucfirst($inventory["role"])?></td>
                 <td><?= date("d F Y, g:iA", strtotime($inventory["last_updated"])) ?></td>
                 <td>
-                  <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit"></i></a>
-                  <a href="delete-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bi bi-trash"></i></i></a>
+                  <a href="edit-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bx bxs-edit fs-5"></i></a>
+                  <a href="delete-supplier.php?id=<?=$inventory["inventory_id"]?>"><i class="bi bi-trash text-danger fs-5"></i></i></a>
                 </td>
               </tr>
               <?php endforeach; ?>
