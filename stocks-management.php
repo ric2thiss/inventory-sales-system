@@ -30,14 +30,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }else if(isset($_POST["add-category"])){
     $conn = dbconnect();
     $category_name = htmlspecialchars(trim($_POST["category_name"]));
-
-    if(insert_category($conn, $category_name)){
-      echo "<script>alert('New category added successfully.'); window.location = 'stocks-management.php';</script>";
-    }else{
-      echo "<script>alert('Failed to add category.'); window.location = 'stocks-management.php';</script>";
+    if(!empty($category_name)){
+      if(insert_category($conn, $category_name)){
+        echo "<script>alert('New category added successfully.'); window.location = 'stocks-management.php';</script>";
+      }else{
+        echo "<script>alert('Failed to add category.'); window.location = 'stocks-management.php';</script>";
+      }
     }
 
-  }else {
+  }else if(isset($_POST["re-stock"])){
+    $conn = dbconnect();
+    $item_id = htmlspecialchars(trim($_POST["item_id"]));
+    $quantity = htmlspecialchars(trim($_POST["quantity_added"]));
+    $purchase_price = htmlspecialchars(trim($_POST["purchase_price"]));
+
+    if(empty($item_id) || empty($quantity) || empty($purchase_price)){
+      echo "<script>alert('Please select an item to re-stock.'); window.location = 'stocks-management.php';</script>";
+    }else{
+      if(re_stock($conn, $item_id, $quantity, $purchase_price)){
+        echo "<script>alert('Stock added successfully!'); window.location = 'stocks-management.php';</script>";
+      }
+    }
+  }
+  
+  
+  else {
       echo "<script>alert('Invalid request');</script>";
   }
 }
@@ -469,7 +486,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category">
         Add Category
     </button>
-
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#re-stock">
+        Re-Stock
+    </button>
+    <!-- Add New Item Modal- -->
     <div class="modal fade" id="add-stock" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -558,7 +578,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </div>
     </div>
-    <!-- Add New Item Modal :  End Large Modal-->
+    <!-- Add Category Item Modal-->
     <div class="modal fade" id="add-category" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -615,6 +635,64 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </div>
     </div>
+
+    <!-- Re-stock Modal :  End Large Modal-->
+    <div class="modal fade" id="re-stock" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inventory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Start form -->
+            
+              <h5 class="card-title">Re-Stock</h5>
+
+              <!-- Floating Labels Form -->
+              <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <select class="form-select" name="item_id" id="floatingInventoryNameById" aria-label="State">
+                      <?php if(empty($categories)):?>
+                      <option selected>No Item Listed</option>
+                      <?php else: ?>
+                      <?php foreach($inventoryList as $item): ?>
+                      <option value="<?=htmlspecialchars($item["inventory_id"])?>"><?=htmlspecialchars($item["item_name"])?></option>
+                      <?php endforeach ?>
+                      <?php endif ?>
+                    </select>
+                    <label for="floatingSupplierName">Item Name</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input type="number" class="form-control" name="quantity_added" id="floatingName">
+                    <label for="floatingName">Quantity</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input type="number" class="form-control" name="purchase_price" id="floatingName">
+                    <label for="floatingName">Purchase Price</label>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <button type="submit" name="re-stock" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- End floating Labels Form -->
+
+
+                   <!-- End form -->
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
     <!-- Category Modal : End Large Modal-->
     <!-- <div class="row">
         <?php foreach($category_count as $category): ?>
@@ -631,47 +709,98 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </div>
         <?php endforeach?>
     </div> -->
+  
+    <div class="row mt-3">
+      <div class="col-lg-6">
+        <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Summary</h5>
 
-    <div class="card mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Category</h5>
+                <!-- Responsive Table -->
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">List</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Qty</th>
+                        <!-- <th scope="col">Date</th> -->
+                        <!-- <th scope="col">Action</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php if(empty($category_count)): ?>
+                        <tr>
+                          <td colspan="7" class="text-center">No List Found</td>
+                        </tr>
+                      <?php endif ?>
+                      <?php foreach($category_count as $category): ?>
+                      <tr>
+                        <th scope="row"><?=$category["category_id"]?></th>
+                        <td><?=$category["category_name"]?></td>
+                        <td><?=$category["item_count"]?></td>
+                        <td><?=$category["total_unit_price"]?></td>
+                        <td><?=$category["total_stock_quantity"]?></td>             
+                      </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End Responsive Table -->
 
-        <!-- Responsive Table -->
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Category</th>
-                <th scope="col">List</th>
-                <th scope="col">Total</th>
-                <th scope="col">Qty</th>
-                <!-- <th scope="col">Date</th> -->
-                <!-- <th scope="col">Action</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <?php if(empty($category_count)): ?>
-                <tr>
-                  <td colspan="7" class="text-center">No List Found</td>
-                </tr>
-              <?php endif ?>
-              <?php foreach($category_count as $category): ?>
-              <tr>
-                <th scope="row"><?=$category["category_id"]?></th>
-                <td><?=$category["category_name"]?></td>
-                <td><?=$category["item_count"]?></td>
-                <td><?=$category["total_unit_price"]?></td>
-                <td><?=$category["total_stock_quantity"]?></td>             
-              </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+              </div>
         </div>
-        <!-- End Responsive Table -->
+      </div>
+
+      <div class="col-lg-6">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Stock Out</h5>
+
+            <!-- Responsive Table -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">List</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Qty</th>
+                    <!-- <th scope="col">Date</th> -->
+                    <!-- <th scope="col">Action</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if(empty($category_count)): ?>
+                    <tr>
+                      <td colspan="7" class="text-center">No List Found</td>
+                    </tr>
+                  <?php endif ?>
+                  <?php foreach($category_count as $category): ?>
+                  <tr>
+                    <th scope="row"><?=$category["category_id"]?></th>
+                    <td><?=$category["category_name"]?></td>
+                    <td><?=$category["item_count"]?></td>
+                    <td><?=$category["total_unit_price"]?></td>
+                    <td><?=$category["total_stock_quantity"]?></td>             
+                  </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+            <!-- End Responsive Table -->
+
+          </div>
+        </div>
 
       </div>
     </div>
+
+    <!-- Inventory Table Card -->
     <div class="card mt-3">
       <div class="card-body">
         <h5 class="card-title">Stocked Items</h5>

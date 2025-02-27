@@ -143,4 +143,64 @@ function insert_category($conn, $category_name)
    
 }
 
+// function re_stock($conn, $item_id, $quantity, $purchase_price)
+// {
+//     try {
+//         // Fetch inventory_id and supplier_id based on the given item_id
+//         $stmt = $conn->prepare("SELECT inventory_id, supplier_id FROM inventory WHERE inventory_id = :item_id");
+//         $stmt->bindParam(':item_id', $item_id, PDO::PARAM_INT);
+//         $stmt->execute();
+//         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+//         if ($row) {
+//             $inventory_id = $row['inventory_id'];
+//             $supplier_id = $row['supplier_id'];
+
+//             // Insert into stock_in table
+//             $sql = "INSERT INTO stock_in (inventory_id, supplier_id, quantity_added, purchase_price) 
+//                     VALUES (:inventory_id, :supplier_id, :quantity, :purchase_price)";
+//             $stmt = $conn->prepare($sql);
+//             $stmt->bindParam(':inventory_id', $inventory_id, PDO::PARAM_INT);
+//             $stmt->bindParam(':supplier_id', $supplier_id, PDO::PARAM_INT);
+//             $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+//             $stmt->bindParam(':purchase_price', $purchase_price, PDO::PARAM_STR);
+//             $stmt->execute();
+
+//             echo "Stock added successfully!";
+//         } else {
+//             echo "Item not found in inventory.";
+//         }
+//     } catch (PDOException $error) {
+//         echo "Error: " . $error->getMessage();
+//     }
+// }
+
+
+function re_stock($conn, $item_id, $quantity, $purchase_price)
+{
+    try {
+        // Insert data into stock_in table with supplier_id fetched using a JOIN
+        $sql = "INSERT INTO stock_in (inventory_id, supplier_id, quantity_added, purchase_price) 
+                SELECT i.inventory_id, i.supplier_id, :quantity, :purchase_price 
+                FROM inventory i 
+                WHERE i.inventory_id = :item_id";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':item_id', $item_id, PDO::PARAM_INT);
+        $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':purchase_price', $purchase_price, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (PDOException $error) {
+        echo "Error: " . $error->getMessage();
+    }
+}
+
+
+
 

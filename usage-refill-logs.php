@@ -425,7 +425,7 @@ require_once("inc.headers.php");
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="index.html">Home</a></li>
       <li class="breadcrumb-item">Inventory</li>
-      <li class="breadcrumb-item active">Stock Tracking</li>
+      <li class="breadcrumb-item active">Usage & Refill Logs</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->
