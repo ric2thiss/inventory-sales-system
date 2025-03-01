@@ -2,7 +2,29 @@
 
 require_once("inc.headers.php");
 require_once('functions/StocksControllers.php');
+require_once('functions/OrderManagementController.php');
 $categories = get_category($conn, "all");
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+  if(isset($_POST["set-order"])){
+    $type = htmlspecialchars(trim($_POST["type"]));
+    $type_qty = htmlspecialchars(trim($_POST["type-qty"]));
+
+    $conn = dbconnect();
+
+
+    $category = htmlspecialchars(trim($_POST['category_id']));
+    $additional_qty = htmlspecialchars(trim($_POST['additional-qty']));
+
+    if(empty($type) ||empty($type_qty)){
+      echo "<script>alert('Please fill the fields');</script>";
+    }else{
+      $result = set_order($conn, $type, $type_qty, $category = 'N/A', $additional_qty = 'N/A');
+    }
+
+
+  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -441,10 +463,10 @@ $categories = get_category($conn, "all");
       
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Billing - <?=ucfirst($user['role'])?></h5>
+          <h5 class="card-title">Billing - WALK IN</h5>
 
           <!-- Vertical Form -->
-          <form class="row g-3">
+          <form class="row g-3" method="POST" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
             <div class="col-md-12">
               <div class="form-floating">
                 <input type="text" class="form-control" id="floatingName" disabled value="<?=htmlspecialchars(ucfirst($user["firstname"] ." " . $user["lastname"] ))?>">
@@ -453,16 +475,16 @@ $categories = get_category($conn, "all");
             </div>
             <div class="col-md-6">
               <div class="form-floating mb-3">
-                <select class="form-select" name="category_id" id="floatingCategory" aria-label="Category">
-                  <option value="">Refill</option>
-                  <option value="">New Bottle</option>
+                <select class="form-select" name="type" id="floatingCategory" aria-label="Category">
+                  <option value="refill">Refill</option>
+                  <option value="new-bottle">New Bottle</option>
                 </select>
-                <label for="floatingCategory">Additional</label>
+                <label for="floatingCategory">Type</label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-floating">
-                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                <input type="number" name="type-qty" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
                 <label for="floatingStockQuantity">Quantity</label>
               </div>
             </div>
@@ -472,6 +494,7 @@ $categories = get_category($conn, "all");
                   <?php if(empty($categories)) :?>
                     <option value="" selected>No Category Listed</option>
                   <?php else: ?>
+                    <option value="" selected>Select</option>
                     <?php foreach($categories as $category): ?>
                       <option value="<?=$category['category_id']?>"><?=$category['category_name']?></option>
                       <?php endforeach ?>
@@ -483,12 +506,12 @@ $categories = get_category($conn, "all");
 
             <div class="col-md-6">
               <div class="form-floating">
-                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
+                <input type="number" name="additional-qty" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
                 <label for="floatingStockQuantity">Quantity</label>
               </div>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary" fdprocessedid="tlwky">Set Order</button>
+              <button type="submit" class="btn btn-primary" name="set-order" fdprocessedid="tlwky">Set Order</button>
               <button type="reset" class="btn btn-secondary" fdprocessedid="1dgd0l">Reset</button>
             </div>
           </form><!-- Vertical Form -->
@@ -497,70 +520,6 @@ $categories = get_category($conn, "all");
       </div>
 
     </div>
-
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title">Water Refilling Station - AQUA EVAN</div>
-          
-
-          <!-- Receipt Style -->
-          <div>
-            <p><strong>Employee:</strong> <span><?= htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"])) ?></span></p>
-            <p><strong>Transaction Type:</strong> <span id="orderTypeText">---Walk-In---</span></p>
-            <p><strong>Order Type:</strong> <span id="orderTypeText">---Refill---</span></p>
-            <p><strong>Quantity:</strong> <span id="quantityText">---</span></p>
-            <p><strong>Category:</strong> <span id="categoryText">---</span></p>
-          </div>
-
-          <!-- Hidden Form -->
-          <form class="row g-3 d-none">
-            <div class="col-md-12">
-              <div class="form-floating d-none">
-                <input type="text" class="form-control" id="floatingName" disabled value="<?= htmlspecialchars(ucfirst($user["firstname"] . " " . $user["lastname"])) ?>">
-                <label for="floatingName">Employee Name</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating mb-3 d-none">
-                <select class="form-select" name="category_id" id="floatingCategory">
-                  <option value="">Refill</option>
-                  <option value="">New Bottle</option>
-                </select>
-                <label for="floatingCategory">Additional</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating d-none">
-                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity">
-                <label for="floatingStockQuantity">Quantity</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating mb-3 d-none">
-                <select class="form-select" name="category_id" id="floatingCategory">
-                  <?php if (empty($categories)) : ?>
-                    <option value="" selected>No Category Listed</option>
-                  <?php else : ?>
-                    <?php foreach ($categories as $category) : ?>
-                      <option value="<?= $category['category_id'] ?>"><?= $category['category_name'] ?></option>
-                    <?php endforeach ?>
-                  <?php endif ?>
-                </select>
-                <label for="floatingCategory">Additional</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating d-none">
-                <input type="number" name="stock_quantity" class="form-control" id="floatingStockQuantity">
-                <label for="floatingStockQuantity">Quantity</label>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
 
   </div>
 </section>
