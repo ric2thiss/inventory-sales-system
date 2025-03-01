@@ -484,8 +484,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
             <div class="col-md-6">
               <div class="form-floating">
-                <input type="number" name="type-qty" class="form-control" id="floatingStockQuantity" placeholder="Quantity">
-                <label for="floatingStockQuantity">Quantity</label>
+                <input type="number" name="type-qty" class="form-control" id="floatingProductQuantity" placeholder="Quantity">
+                <label for="floatingProductQuantity">Quantity</label>
               </div>
             </div>
             <div class="col-md-6">
@@ -510,6 +510,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <label for="floatingStockQuantity">Quantity</label>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" name="unit_price" value="20" class="form-control" id="floatingUnitPrice" placeholder="Quantity">
+                <label for="floatingStockQuantity">Unit Price</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" name="total_price"  class="form-control" id="floatingTotalPrice" placeholder="Quantity">
+                <label for="floatingStockQuantity">Total Price</label>
+              </div>
+            </div>
+
+            <script>
+              document.addEventListener('DOMContentLoaded', () => {
+                const total_price = document.querySelector('#floatingTotalPrice');
+                const unit_price = document.querySelector('#floatingUnitPrice');
+                const quantity = document.getElementById('floatingProductQuantity');
+
+                quantity.addEventListener('input', (e) => {
+                    const unit_price_value = parseFloat(unit_price.value) || 0; // Get numeric value, default to 0
+                    const quantity_value = parseInt(e.target.value) || 0; // Get numeric value, default to 0
+                    total_price.value = unit_price_value * quantity_value; // Update total price
+                });
+              });
+            </script>
             <div class="text-center">
               <button type="submit" class="btn btn-primary" name="set-order" fdprocessedid="tlwky">Set Order</button>
               <button type="reset" class="btn btn-secondary" fdprocessedid="1dgd0l">Reset</button>
