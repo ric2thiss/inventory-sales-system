@@ -10,6 +10,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $type = htmlspecialchars(trim($_POST["type"]));
     $type_qty = htmlspecialchars(trim($_POST["type-qty"]));
 
+    $unit_price = htmlspecialchars(trim($_POST["unit_price"]));
+
     $conn = dbconnect();
 
 
@@ -19,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($type) ||empty($type_qty)){
       echo "<script>alert('Please fill the fields');</script>";
     }else{
-      $result = set_order($conn, $type, $type_qty, $category = 'N/A', $additional_qty = 'N/A');
+      $result = set_order($conn, $type, $type_qty, $unit_price, $category = 'N/A', $additional_qty = 'N/A');
     }
 
 
@@ -340,7 +342,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </a>
       <ul id="forms-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="process-order.php" class="active">
+          <a href="order.php" class="active">
           <i class="bi bi-circle"></i><span>Billing and Order</span>
           </a>
         </li>
